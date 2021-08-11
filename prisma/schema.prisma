@@ -6,3 +6,60 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+model User {
+  id               String             @id @default(uuid())
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @default(now())
+  email            String             @unique
+  name             String
+  avatar           String?
+  Membership       Membership[]
+  LikeRelationship LikeRelationship[]
+}
+
+model Project {
+  id               String             @id @default(uuid())
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @default(now())
+  name             String
+  Membership       Membership[]
+  LikeRelationship LikeRelationship[]
+  Program          Program[]
+}
+
+model Tag {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  name      String
+}
+
+model Membership {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  project   Project  @relation(fields: [projectId], references: [id])
+  projectId String
+  role      String
+}
+
+model LikeRelationship {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  project   Project  @relation(fields: [projectId], references: [id])
+  projectId String
+}
+
+model Program {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id])
+  projectId String
+  name      String?
+  path      String
+}
