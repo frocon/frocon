@@ -21,7 +21,7 @@ app.get(
 )
 
 app.get(
-  '/programs/:programId',
+  '/projects/:projectId/programs/:programId',
   async (req: express.Request, res: express.Response) => {
     const queriedProgram = await programDetailQuery(req.params.programId)
     if (queriedProgram != null) {
