@@ -24,17 +24,6 @@ const projectDetailQuery = async (projectId: string) => {
           updatedAt: true,
         },
       },
-      members: {
-        select: {
-          role: true,
-          user: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-      },
     },
   })
 }
