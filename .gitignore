@@ -91,3 +91,6 @@ sw.*
 
 # DB
 *.db
+
+# storage for development
+/storage

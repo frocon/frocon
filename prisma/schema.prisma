@@ -14,8 +14,8 @@ model User {
   email            String             @unique
   name             String
   avatar           String?
-  Membership       Membership[]
-  LikeRelationship LikeRelationship[]
+  joinedProjects   Membership[]
+  likeProjects     Project[]
 }
 
 model Project {
@@ -23,15 +23,17 @@ model Project {
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @default(now())
   name             String
-  Membership       Membership[]
-  LikeRelationship LikeRelationship[]
-  Program          Program[]
+  members          Membership[]
+  likedUsers       User[]
+  programs         Program[]
+  tags             Tag[]
 }
 
 model Tag {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  name      String
+  id              String            @id @default(uuid())
+  createdAt       DateTime          @default(now())
+  name            String
+  projects        Project[]
 }
 
 model Membership {
@@ -43,15 +45,6 @@ model Membership {
   project   Project  @relation(fields: [projectId], references: [id])
   projectId String
   role      String
-}
-
-model LikeRelationship {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
-  project   Project  @relation(fields: [projectId], references: [id])
-  projectId String
 }
 
 model Program {
