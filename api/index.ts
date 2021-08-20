@@ -1,8 +1,7 @@
 import express from 'express'
 import csrf from 'csurf'
 import cookieParser from 'cookie-parser'
-import projectDetailQuery from './queries/project'
-import { createProjectUseCase } from './usecases/project'
+import { getProjectUseCase, createProjectUseCase } from './usecases/project'
 import { getProgramUseCase } from './usecases/program'
 import { programDetailPresenter } from './presenters/program'
 
@@ -16,8 +15,8 @@ app.use(csrf({ cookie: true }))
 app.get(
   '/projects/:projectId',
   async (req: express.Request, res: express.Response) => {
-    const project = await projectDetailQuery(req.params.projectId)
-    res.json(project)
+    const project = await getProjectUseCase(req.params.projectId)
+    if (project) res.json(project)
   }
 )
 
@@ -31,7 +30,7 @@ app.get(
 
 app.post('/projects', async (req: express.Request, res: express.Response) => {
   const result = await createProjectUseCase(req.body.project)
-  res.json(result)
+  if (result) res.json(result)
 })
 
 export default app

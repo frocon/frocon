@@ -1,6 +1,11 @@
 import ProjectRepository from '../repositories/project'
 import UserRepository from '../repositories/user'
 
+const getProjectUseCase = async (id: string) => {
+  const projectRepository = new ProjectRepository()
+  return await projectRepository.findById(id)
+}
+
 const createProjectUseCase = async (project: { name: string }) => {
   const projectRepository = new ProjectRepository()
   const userRepository = new UserRepository()
@@ -14,4 +19,4 @@ const createProjectUseCase = async (project: { name: string }) => {
   }
 }
 
-export { createProjectUseCase }
+export { getProjectUseCase, createProjectUseCase }
