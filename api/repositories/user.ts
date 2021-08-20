@@ -1,9 +1,48 @@
 import { PrismaClient } from '@prisma/client'
+
 const prisma = new PrismaClient()
 
 export default class UserRepository {
-  // 未実装（現状最初のユーザーを返すようにしている)
+	async createWithInitialMember(name: string, userId: string) {
+		return await prisma.user.create({
+			data: {
+				name,
+			},
+		})
+	}
+
   async findLoginUser() {
     return await prisma.user.findFirst({ orderBy: { id: 'asc' } })
   }
+
+	async findById(userId: string) {
+    return await prisma.user.findUnique({
+			where: {
+					id: userId,
+			},
+			select: {
+					id: true,
+					createdAt: true,
+					updatedAt: true,
+					name: true,
+					email: true,
+					avatar: true,
+					joinedProjects: {
+							select: {
+									id: true,
+									updatedAt: true,
+									projectId: true,
+									role: true,
+							},
+					},
+					likeProjects: {
+							select: {
+									id: true,
+									name: true,
+									updatedAt: true,
+							},
+					},
+			},
+	})
+	}
 }

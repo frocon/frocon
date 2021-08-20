@@ -33,4 +33,12 @@ app.post('/projects', async (req: express.Request, res: express.Response) => {
   if (result) res.json(result)
 })
 
+app.get(
+  '/users/:userId',
+  async (req: express.Request, res: express.Response) => {
+    const user = await userDetailQuery(req.params.userId)
+    res.json(user)
+  }
+)
+
 export default app
