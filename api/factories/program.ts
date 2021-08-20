@@ -1,4 +1,6 @@
+import { Program } from '../entities/program'
 import readProgramFile from '../infrastructures/program_file'
+
 type ProgramFactoryParameter = {
   id: string
   name: string | null
@@ -12,15 +14,8 @@ const programFactory = ({
   updatedAt,
   path,
 }: ProgramFactoryParameter) => {
-  if (path != null) {
-    const source = readProgramFile(path)
-    return {
-      id,
-      name,
-      source,
-      updatedAt,
-    }
-  }
+  const source = path ? readProgramFile(path) : null
+  return new Program(id, name, source, updatedAt)
 }
 
 export default programFactory

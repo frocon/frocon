@@ -2,8 +2,9 @@ import express from 'express'
 import csrf from 'csurf'
 import cookieParser from 'cookie-parser'
 import projectDetailQuery from './queries/project'
-import programDetailQuery from './queries/program'
-import programFactory from './factories/program_factory'
+import { createProjectUseCase } from './usecases/project'
+import { getProgramUseCase } from './usecases/program'
+import { programDetailPresenter } from './presenters/program'
 
 const app: express.Express = express()
 
@@ -23,12 +24,14 @@ app.get(
 app.get(
   '/projects/:projectId/programs/:programId',
   async (req: express.Request, res: express.Response) => {
-    const queriedProgram = await programDetailQuery(req.params.programId)
-    if (queriedProgram != null) {
-      const program = programFactory(queriedProgram)
-      res.json(program)
-    }
+    const program = await getProgramUseCase(req.params.programId)
+    if (program) res.json(programDetailPresenter(program))
   }
 )
+
+app.post('/projects', async (req: express.Request, res: express.Response) => {
+  const result = await createProjectUseCase(req.body.project)
+  res.json(result)
+})
 
 export default app
