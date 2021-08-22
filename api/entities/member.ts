@@ -1,3 +1,5 @@
+import { User } from './user'
+
 export enum Role {
   Admin = 'admin',
   General = 'general',
@@ -5,11 +7,13 @@ export enum Role {
 
 export class Member {
   id: string
+  userId: string
   name: string
   role: Role
 
-  constructor(id: string, name: string, role: Role) {
+  constructor(id: string, userId: string, name: string, role: Role) {
     this.id = id
+    this.userId = userId
     this.name = name
     this.role = role
   }
@@ -48,5 +52,14 @@ export class MemberCollection {
 
   isAdminMemberExist(): boolean {
     return this.members.some((member) => member.role === Role.Admin)
+  }
+
+  isAdminMember(user: User): boolean {
+    this.members.forEach((member, _) => {
+      if (member.userId === user.id) {
+        return member.role === Role.Admin
+      }
+    })
+    return false
   }
 }

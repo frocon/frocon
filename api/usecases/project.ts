@@ -3,20 +3,29 @@ import UserRepository from '../repositories/user'
 
 const getProjectUseCase = async (id: string) => {
   const projectRepository = new ProjectRepository()
-  return await projectRepository.findById(id)
+  return await projectRepository.findWithTagsAndProgramsById(id)
 }
 
-const createProjectUseCase = async (project: { name: string }) => {
+const createProjectUseCase = async (name: string) => {
   const projectRepository = new ProjectRepository()
   const userRepository = new UserRepository()
 
   const loginUser = await userRepository.findLoginUser()
   if (loginUser !== null) {
-    return await projectRepository.createWithInitialMember(
-      project.name,
-      loginUser.id
-    )
+    return await projectRepository.createWithInitialMember(name, loginUser.id)
   }
 }
 
-export { getProjectUseCase, createProjectUseCase }
+const updateProjectUseCase = async (id: string, name: string) => {
+  const projectRepository = new ProjectRepository()
+  const project = await projectRepository.getProjectWithMemberCollectionByid(id)
+  const userRepository = new UserRepository()
+
+  const loginUser = await userRepository.findLoginUser()
+  if (project && loginUser) {
+    await project.update(name, loginUser)
+    return project
+  }
+}
+
+export { getProjectUseCase, createProjectUseCase, updateProjectUseCase }
