@@ -1,17 +1,17 @@
 import { User } from './user'
 
 export enum Role {
-  Admin = 'admin',
-  General = 'general',
+  Admin = 'Admin',
+  General = 'General',
 }
 
 export class Member {
   id: string
   userId: string
-  name: string
+  name: string | null
   role: Role
 
-  constructor(id: string, userId: string, name: string, role: Role) {
+  constructor(id: string, userId: string, name: string | null, role: Role) {
     this.id = id
     this.userId = userId
     this.name = name
@@ -51,15 +51,10 @@ export class MemberCollection {
   }
 
   isAdminMemberExist(): boolean {
-    return this.members.some((member) => member.role === Role.Admin)
+    return this.members.some((member) => member.role == Role.Admin)
   }
 
   isAdminMember(user: User): boolean {
-    this.members.forEach((member, _) => {
-      if (member.userId === user.id) {
-        return member.role === Role.Admin
-      }
-    })
-    return false
+    return this.members.some((member, _) => member.userId === user.id && member.role == Role.Admin)
   }
 }

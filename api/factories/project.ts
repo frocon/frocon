@@ -1,5 +1,7 @@
 import { Project } from '../entities/project'
+import { ProjectRepositoryInterface } from '../entities/interface'
 import { Program, ProgramCollection } from '../entities/program'
+import { Role, Member, MemberCollection } from '../entities/member'
 
 type ProjectWithProgramFactoryParams = {
   project: {
@@ -38,4 +40,25 @@ const projectWithProgramFactory = (
   return project
 }
 
-export { projectWithProgramFactory }
+type ProjectWithMembersFactoryParams = {
+  id: string,
+  name: string,
+  updatedAt: Date,
+  createdAt: Date,
+  members: Array<{
+    id: string,
+    userId: string,
+    role: string,
+  }>
+}
+
+const projectWithMembersFactory = (projectWithMembers: ProjectWithMembersFactoryParams, projectRepository: ProjectRepositoryInterface) => {
+  const project = new Project(projectWithMembers.id, projectWithMembers.name, projectWithMembers.updatedAt, projectRepository)
+  const members = projectWithMembers.members.map((member) => {
+    return new Member(member.id, member.userId, null, Role[member.role as keyof typeof Role])
+  })
+  const memberCollection = new MemberCollection(members)
+  if (memberCollection) project.setMemberCollection(memberCollection)
+  return project
+}
+export { projectWithProgramFactory, projectWithMembersFactory }

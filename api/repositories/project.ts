@@ -73,4 +73,15 @@ export default class ProjectRepository implements ProjectRepositoryInterface {
       },
     })
   }
+
+  async findWithMembers(id: string) {
+    return await prisma.project.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        members: true
+      }
+    })
+  }
 }

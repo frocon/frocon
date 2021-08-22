@@ -15,7 +15,7 @@ const app: express.Express = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
-app.use(csrf({ cookie: true }))
+// app.use(csrf({ cookie: true }))
 
 app.get(
   '/projects/:projectId',
