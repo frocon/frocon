@@ -6,7 +6,7 @@ import {
   createProjectUseCase,
   updateProjectUseCase,
 } from './usecases/project'
-import { getProgramUseCase } from './usecases/program'
+import { getProgramUseCase, createProgramUseCase } from './usecases/program'
 import { programDetailPresenter } from './presenters/program'
 import { projectDetailPresenter } from './presenters/project'
 
@@ -15,7 +15,7 @@ const app: express.Express = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
-// app.use(csrf({ cookie: true }))
+app.use(csrf({ cookie: true }))
 
 app.get(
   '/projects/:projectId',
@@ -30,6 +30,17 @@ app.get(
   async (req: express.Request, res: express.Response) => {
     const program = await getProgramUseCase(req.params.programId)
     if (program) res.json(programDetailPresenter(program))
+  }
+)
+
+app.post(
+  '/projects/:projectId/programs',
+  async (req: express.Request, res: express.Response) => {
+    const program = await createProgramUseCase(
+      req.params.projectId,
+      req.body.program.name
+    )
+    res.json(programDetailPresenter(program))
   }
 )
 

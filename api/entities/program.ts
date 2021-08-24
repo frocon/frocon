@@ -23,4 +23,8 @@ export class ProgramCollection {
   constructor(programs: Program[]) {
     this.programs = programs
   }
+
+  isSameNameProgramExist(name: string): boolean {
+    return this.programs.some((p) => p.name === name)
+  }
 }

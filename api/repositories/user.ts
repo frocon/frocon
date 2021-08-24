@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({ rejectOnNotFound: true })
 
 export default class UserRepository {
   // 未実装（現状最初のユーザーを返すようにしている)

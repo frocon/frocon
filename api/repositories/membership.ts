@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({ rejectOnNotFound: true })
 
 export default class MemberCollectionRepository {
   async findByProjetId(projectId: string) {

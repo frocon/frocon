@@ -26,15 +26,6 @@ export class MemberCollection {
     this.members = members
   }
 
-  add(member: Member): boolean {
-    if (!this.members.some((m) => m.id === member.id)) {
-      this.members.push(member)
-      return true
-    }
-
-    return false
-  }
-
   delete(id: string): boolean {
     this.members.forEach((member, index) => {
       if (member.id === id) {
@@ -51,10 +42,16 @@ export class MemberCollection {
   }
 
   isAdminMemberExist(): boolean {
-    return this.members.some((member) => member.role == Role.Admin)
+    return this.members.some((member) => member.role === Role.Admin)
   }
 
   isAdminMember(user: User): boolean {
-    return this.members.some((member, _) => member.userId === user.id && member.role == Role.Admin)
+    return this.members.some(
+      (member, _) => member.userId === user.id && member.role === Role.Admin
+    )
+  }
+
+  isMember(user: User): boolean {
+    return this.members.some((member, _) => member.userId === user.id)
   }
 }

@@ -1,8 +1,10 @@
 import { PrismaClient } from '@prisma/client'
 import { Role } from '../entities/member'
 import { ProjectRepositoryInterface } from '../entities/interface'
+import { Project } from '../entities/project'
+import { projectWithMembersFactory } from '../factories/project'
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({ rejectOnNotFound: true })
 
 export default class ProjectRepository implements ProjectRepositoryInterface {
   async update(id: string, name: string) {
@@ -41,11 +43,13 @@ export default class ProjectRepository implements ProjectRepositoryInterface {
   }
 
   async findById(projectId: string) {
-    return await prisma.project.findUnique({
+    const project = await prisma.project.findUnique({
       where: {
         id: projectId,
       },
     })
+
+    return new Project(project.id, project.name, project.updatedAt)
   }
 
   async findWithTagsAndProgramsById(projectId: string) {
@@ -75,13 +79,24 @@ export default class ProjectRepository implements ProjectRepositoryInterface {
   }
 
   async findWithMembers(id: string) {
-    return await prisma.project.findUnique({
+    const project = await prisma.project.findUnique({
       where: {
-        id: id,
+        id,
       },
       include: {
-        members: true
-      }
+        members: true,
+      },
+    })
+
+    const members = project.members.map((member) => {
+      return { id: member.id, userId: member.userId, role: member.role }
+    })
+
+    return projectWithMembersFactory({
+      id: project.id,
+      name: project.name,
+      updatedAt: project.updatedAt,
+      members,
     })
   }
 }
