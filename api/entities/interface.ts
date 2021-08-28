@@ -1,3 +1,5 @@
+import { Program } from './program'
+
 export interface ProjectRepositoryInterface {
   update: (
     id: string,
@@ -7,8 +9,9 @@ export interface ProjectRepositoryInterface {
 }
 
 export interface ProgramRepositoryInterface {
-  create: (
-    projectId: string,
-    name: string
-  ) => Promise<{ id: string; name: string; updatedAt: Date }>
+  create: (projectId: string, name: string) => Promise<Program>
+
+  updateName: (programId: string, name: string) => Promise<Program>
+
+  updateSource: (programId: string, source: string) => Promise<Program>
 }

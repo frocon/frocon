@@ -10,9 +10,40 @@ const getProgramUseCase = async (id: string) => {
 const createProgramUseCase = async (projectId: string, name: string) => {
   const projectRepository = new ProjectRepository()
   const userRepository = new UserRepository()
-  const project = await projectRepository.findWithMembers(projectId)
+  const project = await projectRepository.findWithMembersAndPrograms(projectId)
   const loginUser = await userRepository.findLoginUser()
   return await project.createProgram(name, loginUser)
 }
 
-export { getProgramUseCase, createProgramUseCase }
+const updateProgramNameUseCase = async (
+  projectId: string,
+  programId: string,
+  name: string
+) => {
+  const projectRepository = new ProjectRepository()
+  const userRepository = new UserRepository()
+  const project = await projectRepository.findWithMembersAndPrograms(projectId)
+  const loginUser = await userRepository.findLoginUser()
+
+  return await project.updateProgramName(programId, name, loginUser)
+}
+
+const updateProgramSourceUseCase = async (
+  projectId: string,
+  programId: string,
+  source: string
+) => {
+  const projectRepository = new ProjectRepository()
+  const userRepository = new UserRepository()
+  const project = await projectRepository.findWithMembersAndPrograms(projectId)
+  const loginUser = await userRepository.findLoginUser()
+
+  return await project.updateProgramSource(programId, source, loginUser)
+}
+
+export {
+  getProgramUseCase,
+  createProgramUseCase,
+  updateProgramNameUseCase,
+  updateProgramSourceUseCase,
+}

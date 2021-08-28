@@ -2,7 +2,7 @@ import ProjectRepository from '../repositories/project'
 import ProgramRepository from '../repositories/program'
 import { MemberCollection } from './member'
 import { User } from './user'
-import { Program, ProgramCollection } from './program'
+import { ProgramCollection } from './program'
 import {
   ProjectRepositoryInterface,
   ProgramRepositoryInterface,
@@ -64,7 +64,29 @@ export class Project {
 
     if (this.programCollection.isSameNameProgramExist(name))
       throw new ValidationError('同じ名前のプログラムが存在しています')
-    const program = await this.programRepository.create(this.id, name)
-    return new Program(program.id, program.name, null, program.updatedAt)
+    return await this.programRepository.create(this.id, name)
+  }
+
+  async updateProgramName(programId: string, name: string, user: User) {
+    if (!this.memberCollection) throw new Error('memberCollectionが必要です')
+    if (!this.programCollection) throw new Error('programCollectionが必要です')
+
+    if (!this.memberCollection.isMember(user))
+      throw new PermissionError('権限がありません')
+
+    if (this.programCollection.isSameNameProgramExist(name))
+      throw new ValidationError('同じ名前のプログラムが存在しています')
+
+    return await this.programRepository.updateName(programId, name)
+  }
+
+  async updateProgramSource(programId: string, source: string, user: User) {
+    if (!this.memberCollection) throw new Error('memberCollectionが必要です')
+    if (!this.programCollection) throw new Error('programCollectionが必要です')
+
+    if (!this.memberCollection.isMember(user))
+      throw new PermissionError('権限がありません')
+
+    return await this.programRepository.updateSource(programId, source)
   }
 }

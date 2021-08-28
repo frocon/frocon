@@ -6,8 +6,17 @@ import {
   createProjectUseCase,
   updateProjectUseCase,
 } from './usecases/project'
-import { getProgramUseCase, createProgramUseCase } from './usecases/program'
-import { programDetailPresenter } from './presenters/program'
+import {
+  getProgramUseCase,
+  createProgramUseCase,
+  updateProgramNameUseCase,
+  updateProgramSourceUseCase,
+} from './usecases/program'
+import {
+  programDetailPresenter,
+  programUpdateNamePresenter,
+  programUpdateSourcePresenter,
+} from './presenters/program'
 import { projectDetailPresenter } from './presenters/project'
 
 const app: express.Express = express()
@@ -57,6 +66,30 @@ app.patch(
       req.body.project.name
     )
     if (result) res.json(projectDetailPresenter(result))
+  }
+)
+
+app.patch(
+  '/projects/:projectId/programs/:programId/name',
+  async (req: express.Request, res: express.Response) => {
+    const program = await updateProgramNameUseCase(
+      req.params.projectId,
+      req.params.programId,
+      req.body.program.name
+    )
+    res.json(programUpdateNamePresenter(program))
+  }
+)
+
+app.patch(
+  '/projects/:projectId/programs/:programId/source',
+  async (req: express.Request, res: express.Response) => {
+    const program = await updateProgramSourceUseCase(
+      req.params.projectId,
+      req.params.programId,
+      req.body.program.source
+    )
+    res.json(programUpdateSourcePresenter(program))
   }
 )
 
