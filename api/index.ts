@@ -3,6 +3,7 @@ import csrf from 'csurf'
 import cookieParser from 'cookie-parser'
 import { getProjectUseCase, createProjectUseCase } from './usecases/project'
 import { getProgramUseCase } from './usecases/program'
+import { getUserUseCase } from './usecases/user'
 import { programDetailPresenter } from './presenters/program'
 
 const app: express.Express = express()
@@ -36,7 +37,7 @@ app.post('/projects', async (req: express.Request, res: express.Response) => {
 app.get(
   '/users/:userId',
   async (req: express.Request, res: express.Response) => {
-    const user = await userDetailQuery(req.params.userId)
+    const user = await getUserUseCase(req.params.userId)
     res.json(user)
   }
 )

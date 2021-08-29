@@ -3,22 +3,46 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export default class UserRepository {
-	async createWithInitialMember(name: string, userId: string) {
+
+	async update(id: string, name: string, email: string, avatar: string) {
+		return await prisma.user.update({
+			where: {
+				id: id,
+			},
+			data: {
+				name,
+				email,
+				avatar,
+			}
+		})
+	}
+
+	async delete(id: string) {
+		return await prisma.user.delete({
+			where: {
+				id: id,
+			}
+		})
+	}
+
+	async createNewUser(name: string, email: string, avatar: string) {
 		return await prisma.user.create({
 			data: {
 				name,
+				email,
+				avatar,
 			},
 		})
 	}
 
-  async findLoginUser() {
+	async findLoginUser() {
     return await prisma.user.findFirst({ orderBy: { id: 'asc' } })
-  }
+	}
 
-	async findById(userId: string) {
+	async findById(id: string) {
     return await prisma.user.findUnique({
 			where: {
-					id: userId,
+					id: id,
 			},
 			select: {
 					id: true,
