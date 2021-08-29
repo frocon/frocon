@@ -98,13 +98,6 @@ body {
   margin: 0;
   background-color: beige;
 }
-#blockly1 {
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 50%;
-  height: 50%;
-}
 #blockly {
   position: absolute;
   left: 0;
