@@ -52,4 +52,21 @@ export default {
   build: {},
 
   serverMiddleware: [{ path: '/api', handler: '~/api/index.ts' }],
+
+  // Vue configuration
+  vue: {
+    config: {
+      productionTip: false,
+      ignoredElements: [
+        'field',
+        'block',
+        'category',
+        'xml',
+        'mutation',
+        'value',
+        'sep',
+      ],
+      devtools: true,
+    },
+  },
 }

@@ -20,6 +20,7 @@
     "@types/cookie-parser": "^1.4.2",
     "@types/csurf": "^1.11.2",
     "@types/express": "^4.17.13",
+    "blockly": "^6.20210701.0",
     "bootstrap": "^4.6.0",
     "bootstrap-vue": "^2.21.2",
     "cookie-parser": "^1.4.5",
@@ -27,7 +28,8 @@
     "csurf": "^1.11.0",
     "express": "^4.17.1",
     "multer": "^1.4.3",
-    "nuxt": "^2.15.7"
+    "nuxt": "^2.15.7",
+    "sweetalert2": "^11.1.4"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.14.7",
