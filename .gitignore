@@ -94,3 +94,6 @@ sw.*
 
 # storage for development
 /storage
+
+# firebase sdk private key
+serviceAccountKey.json
