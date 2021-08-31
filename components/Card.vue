@@ -1,16 +1,20 @@
 <template>
   <div class="p-10">
     <!--Card 1-->
-    <div class="max-w-sm rounded overflow-hidden shadow-lg">
+    <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
       <div class="px-6 py-4">
-        <div class="font-bold text-xl mb-2">{{ name }}</div>
-        <p class="text-gray-500 text-sm">
-          最終更新 {{ $dateFns.format(updatedAt, 'yyyy-MM-dd HH:mm:ss') }}
+        <div class="font-bold text-xl mb-2">{{ project.name }}</div>
+        <p class="text-gray-600 text-sm">
+          <span class="font-bold">{{ project.role }}</span> として参加しています
+        </p>
+        <p class="text-gray-500 text-xs">
+          最終更新
+          {{ $dateFns.format(project.updatedAt, 'yyyy-MM-dd HH:mm:ss') }}
         </p>
       </div>
       <div class="px-6 pt-4 pb-2">
-        <ul>
-          <li v-for="tag in tags" :key="tag.id">
+        <ul class="list-none">
+          <li v-for="tag in project.tags" :key="tag.id" class="float-left">
             <span
               class="
                 inline-block
@@ -37,26 +41,19 @@
 export default {
   name: 'Card',
   props: {
-    id: {
-      type: String,
-      default: '',
-    },
-    name: {
-      type: String,
-      default: '',
-    },
-    updatedAt: {
-      type: Date,
-      default: null,
-    },
-    tags: {
-      type: {
-        id: String,
-        name: String,
-      },
-      default: {
-        id: '',
-        name: '',
+    project: {
+      type: Object,
+      default: () => {
+        return {
+          id: '',
+          name: '',
+          updatedAt: new Date(),
+          role: '',
+          tags: {
+            id: '',
+            name: '',
+          },
+        }
       },
     },
   },

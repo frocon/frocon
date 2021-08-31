@@ -10,6 +10,22 @@ import {
 const prisma = new PrismaClient({ rejectOnNotFound: true })
 
 export default class ProjectRepository implements ProjectRepositoryInterface {
+  async getJoinedProjects(userId: string) {
+    return await prisma.project.findMany({
+      where: {
+        members: {
+          some: {
+            userId,
+          },
+        },
+      },
+      include: {
+        members: true,
+        tags: true,
+      },
+    })
+  }
+
   async update(id: string, name: string) {
     return await prisma.project.update({
       where: {

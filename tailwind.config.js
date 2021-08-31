@@ -14,6 +14,9 @@ module.exports = {
         light: '#EEC4C4',
         accent: '9AD6D2',
       },
+      backgroundColor: {
+        primary: '#D1D9D9',
+      },
     },
   },
   variants: {
