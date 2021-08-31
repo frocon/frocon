@@ -2,7 +2,9 @@
   <div>
     <Navbar />
     <div class="h-full bg-primary">
-      <Nuxt />
+      <div class="container mx-auto">
+        <Nuxt />
+      </div>
     </div>
   </div>
 </template>

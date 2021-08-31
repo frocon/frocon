@@ -14,9 +14,7 @@
     "
   >
     <div class="mb-2 sm:mb-0">
-      <a
-        href="/home"
-        class="text-2xl no-underline text-white hover:text-blue-dark"
+      <a href="/projects" class="text-2xl no-underline text-white font-semibold"
         >frocon</a
       >
     </div>

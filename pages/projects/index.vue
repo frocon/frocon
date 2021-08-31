@@ -1,6 +1,7 @@
 <template>
   <div>
-    <CreateProjectButton class="ml-10 mt-4" />
+    <h6 class="text-xl font-bold text-gray-600 pt-4">参加中のプロジェクト</h6>
+    <CreateProjectButton class="mt-4" />
     <ul>
       <li v-for="project in projects" :key="project.id" class="float-left">
         <Card :project="project" />

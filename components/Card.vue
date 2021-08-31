@@ -1,7 +1,7 @@
 <template>
   <div class="p-10">
     <!--Card 1-->
-    <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+    <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white pb-4">
       <div class="px-6 py-4">
         <div class="font-bold text-xl mb-2">{{ project.name }}</div>
         <p class="text-gray-600 text-sm">
