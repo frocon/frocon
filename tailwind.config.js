@@ -12,7 +12,10 @@ module.exports = {
       colors: {
         main: '#F29191',
         light: '#EEC4C4',
-        accent: '9AD6D2',
+        accent: '#4CCEC5', // 9AD6D2, 4AD3CC
+        hover: {
+          accent: '#63B2AD',
+        },
       },
       backgroundColor: {
         primary: '#D1D9D9',

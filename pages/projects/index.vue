@@ -1,9 +1,12 @@
 <template>
-  <ul>
-    <li v-for="project in projects" :key="project.id" class="float-left">
-      <Card :project="project" />
-    </li>
-  </ul>
+  <div>
+    <CreateProjectButton class="ml-10 mt-4" />
+    <ul>
+      <li v-for="project in projects" :key="project.id" class="float-left">
+        <Card :project="project" />
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
