@@ -2,6 +2,7 @@ import express from 'express'
 import csrf from 'csurf'
 import cookieParser from 'cookie-parser'
 import {
+  getProjectsUseCase,
   getProjectUseCase,
   createProjectUseCase,
   updateProjectUseCase,
@@ -17,7 +18,7 @@ import {
   programUpdateNamePresenter,
   programUpdateSourcePresenter,
 } from './presenters/program'
-import { projectDetailPresenter } from './presenters/project'
+import { projectDetailPresenter, projectsPresenter } from './presenters/project'
 
 const app: express.Express = express()
 
@@ -25,6 +26,11 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(csrf({ cookie: true }))
+
+app.get('/projects', async (_req: express.Request, res: express.Response) => {
+  const [userId, projects] = await getProjectsUseCase()
+  if (projects) res.json(projectsPresenter(userId, projects))
+})
 
 app.get(
   '/projects/:projectId',

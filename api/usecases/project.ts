@@ -1,6 +1,31 @@
 import ProjectRepository from '../repositories/project'
 import UserRepository from '../repositories/user'
 
+export type ProjectsWithMembersAndTags = {
+  id: string
+  name: string
+  updatedAt: Date
+  members: {
+    userId: string
+    role: string
+  }[]
+  tags: {
+    id: string
+    name: string
+  }[]
+}[]
+
+const getProjectsUseCase = async (): Promise<
+  [string, ProjectsWithMembersAndTags]
+> => {
+  const projectRepository = new ProjectRepository()
+  const userRepository = new UserRepository()
+
+  const loginUser = await userRepository.findLoginUser()
+  const projects = await projectRepository.getJoinedProjects(loginUser.id)
+  return [loginUser.id, projects]
+}
+
 const getProjectUseCase = async (id: string) => {
   const projectRepository = new ProjectRepository()
   return await projectRepository.findWithTagsAndProgramsById(id)
@@ -24,4 +49,9 @@ const updateProjectUseCase = async (id: string, name: string) => {
   return project
 }
 
-export { getProjectUseCase, createProjectUseCase, updateProjectUseCase }
+export {
+  getProjectsUseCase,
+  getProjectUseCase,
+  createProjectUseCase,
+  updateProjectUseCase,
+}

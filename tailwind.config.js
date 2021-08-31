@@ -8,7 +8,19 @@ module.exports = {
   ],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        main: '#F29191',
+        light: '#EEC4C4',
+        accent: '#4CCEC5', // 9AD6D2, 4AD3CC
+        hover: {
+          accent: '#63B2AD',
+        },
+      },
+      backgroundColor: {
+        primary: '#D1D9D9',
+      },
+    },
   },
   variants: {
     extend: {},
