@@ -25,6 +25,7 @@
     "core-js": "^3.15.1",
     "csurf": "^1.11.0",
     "express": "^4.17.1",
+    "firebase": "^9.0.1",
     "multer": "^1.4.3",
     "nuxt": "^2.15.7",
     "sweetalert2": "^11.1.4"
