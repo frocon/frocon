@@ -96,4 +96,4 @@ sw.*
 /storage
 
 # firebase sdk private key
-serviceAccountKey.json
+firebaseConfig.json
