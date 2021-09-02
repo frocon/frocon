@@ -1,5 +1,5 @@
 import express from 'express'
-import csrf from 'csurf'
+import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import {
   getProjectsUseCase,
@@ -22,10 +22,9 @@ import { projectDetailPresenter, projectsPresenter } from './presenters/project'
 
 const app: express.Express = express()
 
-app.use(express.json())
+app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
-app.use(csrf({ cookie: true }))
 
 app.get('/projects', async (_req: express.Request, res: express.Response) => {
   const [userId, projects] = await getProjectsUseCase()

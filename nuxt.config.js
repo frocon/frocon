@@ -1,6 +1,7 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
+    titleTemplate: 'frocon | %s',
     title: 'frocon',
     htmlAttrs: {
       lang: 'en',
@@ -42,7 +43,7 @@ export default {
     browserBaseURL: process.env.BASE_APP_URL || '/',
     requestInterceptor(config, { store }) {
       if (store.state.csrfToken) {
-        config.headers.common['x-csrf-token'] = store.state.csrfToken
+        // config.headers.common['x-csrf-token'] = store.state.csrfToken
       }
       return config
     },
@@ -72,4 +73,10 @@ export default {
 
   // disable telemetry
   telemetry: false,
+
+  // loading
+  loading: {
+    color: 'gray',
+    height: '5px',
+  },
 }
