@@ -10,7 +10,11 @@ admin.initializeApp({ credential: admin.credential.cert(serviceAccount) })
 const verifyIdToken = async (req: Express.Request) => {
   const idToken = req.header('Authorization')
   if (!idToken) return ''
-  const { uid } = await admin.auth().verifyIdToken(idToken)
+  const uid = await admin
+    .auth()
+    .verifyIdToken(idToken)
+    .then((decodedToken) => decodedToken.uid)
+    .catch(() => '')
   return uid
 }
 
