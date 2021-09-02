@@ -4463,17 +4463,15 @@ data-urls@^1.1.0:
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
 
-<<<<<<< HEAD
 date-and-time@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/date-and-time/-/date-and-time-2.0.0.tgz#99f5fb6b6c7bcd4d1f6dcbeb37553dc0ff797b65"
   integrity sha512-HJSzj25iPm8E01nt+rSmCIlwjsmjvKfUivG/kXBglpymcHF1FolWAqWwTEV4FvN1Lx5UjPf0J1W4H8yQsVBfFg==
-=======
+
 date-fns@^2.19.0:
   version "2.23.0"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.23.0.tgz#4e886c941659af0cf7b30fafdd1eaa37e88788a9"
   integrity sha512-5ycpauovVyAk0kXNZz6ZoB9AYMZB4DObse7P3BPWmyEjXNORTI8EJ6X0uaSAq4sCHzM1uajzrkr6HnsLQpxGXA==
->>>>>>> ffb6919ffde44a3973bc583c284a9fcf714ea738
 
 de-indent@^1.0.2:
   version "1.0.2"
@@ -11605,11 +11603,7 @@ uuid@^3.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
 
-<<<<<<< HEAD
-uuid@^8.0.0:
-=======
-uuid@^8.3.2:
->>>>>>> ffb6919ffde44a3973bc583c284a9fcf714ea738
+uuid@^8.0.0, uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
