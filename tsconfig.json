@@ -28,7 +28,8 @@
       "@nuxtjs/axios",
       "@types/node",
       "@nuxtjs/date-fns"
-    ]
+    ],
+    "resolveJsonModule": true
   },
   "exclude": [
     "node_modules",

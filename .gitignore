@@ -94,3 +94,7 @@ sw.*
 
 # storage for development
 /storage
+
+# firebase
+firebaseConfig.json
+serviceAccount.json
