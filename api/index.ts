@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser'
 import projectDetailQuery from './queries/project'
 import programDetailQuery from './queries/program'
 import programFactory from './factories/program_factory'
+import { verifyIdToken } from './infrastructures/firebase'
 
 const app: express.Express = express()
 
@@ -16,6 +17,7 @@ app.get(
   '/projects/:projectId',
   async (req: express.Request, res: express.Response) => {
     const project = await projectDetailQuery(req.params.projectId)
+    const uid = await verifyIdToken(req).catch(() => '')
     res.json(project)
   }
 )
