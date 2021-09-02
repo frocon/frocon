@@ -26,9 +26,9 @@
     "types": [
       "@nuxt/types",
       "@nuxtjs/axios",
-      "@types/node"
-    ],
-    "resolveJsonModule": true
+      "@types/node",
+      "@nuxtjs/date-fns"
+    ]
   },
   "exclude": [
     "node_modules",
