@@ -16,8 +16,12 @@ app.use(csrf({ cookie: true }))
 app.get(
   '/projects/:projectId',
   async (req: express.Request, res: express.Response) => {
+    const uid = await verifyIdToken(req)
+    if (uid === '') {
+      res.status(401).send('Unauthorized')
+      return
+    }
     const project = await projectDetailQuery(req.params.projectId)
-    const uid = await verifyIdToken(req).catch(() => '')
     res.json(project)
   }
 )
@@ -25,6 +29,11 @@ app.get(
 app.get(
   '/projects/:projectId/programs/:programId',
   async (req: express.Request, res: express.Response) => {
+    const uid = await verifyIdToken(req)
+    if (uid === '') {
+      res.status(401).send('Unauthorized')
+      return
+    }
     const queriedProgram = await programDetailQuery(req.params.programId)
     if (queriedProgram != null) {
       const program = programFactory(queriedProgram)
