@@ -1,10 +1,31 @@
 <template>
-  <EditableText class="ml-10" :text="project.name" :on-submit="renameProject" />
+  <div class="h-5/6">
+    <EditableText
+      class="pt-4 px-10"
+      :text="project.name"
+      :on-submit="renameProject"
+    />
+    <EditorTab
+      :programs="programs"
+      :selected-id="selectedId"
+      :on-click-tab="onClickTab"
+    />
+    <Editor :source="source" :update-source="updateSource" />
+  </div>
 </template>
 
 <script lang="ts">
 import { $axios } from '@/utils/api'
 import Vue from 'vue'
+
+const getSource = async (projectId: string, programId: string) => {
+  const program = await $axios.$get(
+    `http://localhost:3000/api/projects/${projectId}/programs/${programId}`
+  )
+  if (!program.source)
+    return '<xml xmlns="https://developers.google.com/blockly/xml"></xml>'
+  return program.source
+}
 
 export default Vue.extend({
   layout: 'fullwidth',
@@ -26,8 +47,18 @@ export default Vue.extend({
     )
 
     const tags = res.tags
+    const selectedId = programs.length > 0 ? programs[0].id : null
 
-    return { project, programs, tags }
+    const source =
+      selectedId === null ? '' : await getSource(params.id, selectedId)
+
+    return {
+      project,
+      programs,
+      tags,
+      selectedId,
+      source,
+    }
   },
   data() {
     return {
@@ -46,6 +77,8 @@ export default Vue.extend({
         id: '',
         name: '',
       },
+      selectedId: '',
+      source: '',
     }
   },
   head() {
@@ -61,6 +94,20 @@ export default Vue.extend({
         .then((res) => {
           Vue.set(this.project, 'name', res.name)
         })
+    },
+
+    async onClickTab(selectedId: string) {
+      this.selectedId = selectedId
+      this.source = await getSource(this.$route.params.id, selectedId)
+    },
+
+    updateSource(source: string) {
+      $axios.$patch(
+        `http://localhost:3000/api/projects/${this.$route.params.id}/programs/${this.selectedId}/source`,
+        {
+          program: { source },
+        }
+      )
     },
   },
 })

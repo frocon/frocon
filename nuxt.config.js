@@ -73,10 +73,4 @@ export default {
 
   // disable telemetry
   telemetry: false,
-
-  // loading
-  loading: {
-    color: 'gray',
-    height: '5px',
-  },
 }

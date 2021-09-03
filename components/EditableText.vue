@@ -17,13 +17,22 @@
   </h6>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue'
 import Swal from 'sweetalert2'
 
 export default Vue.extend({
   name: 'EditableText',
-  props: ['text', 'onSubmit'],
+  props: {
+    text: {
+      type: String,
+      required: true,
+    },
+    onSubmit: {
+      type: Function,
+      required: true,
+    },
+  },
   methods: {
     onClick() {
       Swal.fire({
