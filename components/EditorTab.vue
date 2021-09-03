@@ -11,8 +11,13 @@
             : ''
         "
         @click="onClickTab(program.id)"
+        @keyup.right="tabMenu"
       >
-        {{ program.name }}
+        <EditableText
+          :text="program.name"
+          :swal-option="swalOption(program.name)"
+          :on-submit="renameProgramFactory(program.id)"
+        />
       </button>
       <button class="ml-2" @click="addTab">
         <svg
@@ -35,6 +40,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import Swal from 'sweetalert2'
+import { $axios } from '@/utils/api'
 
 export default Vue.extend({
   name: 'EditorTab',
@@ -69,6 +75,30 @@ export default Vue.extend({
           this.$props.onSubmitNewTab(result.value)
         }
       })
+    },
+    swalOption(name: string) {
+      return {
+        title: 'プログラム名を変更',
+        input: 'text',
+        inputValue: name,
+        text: name,
+        confirmButtonText: '変更',
+      }
+    },
+    renameProgramFactory(programId: string) {
+      return (name: string) => {
+        $axios
+          .$patch(
+            `http://localhost:3000/api/projects/${this.$route.params.id}/programs/${programId}/name`,
+            { program: { name } }
+          )
+          .then((res) => {
+            const index = this.programs.findIndex(
+              (program) => program.id === programId
+            )
+            Vue.set(this.programs, index, res)
+          })
+      }
     },
   },
 })

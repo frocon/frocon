@@ -1,9 +1,10 @@
 <template>
   <div class="h-5/6">
     <EditableText
-      class="pt-4 px-10"
+      class="pt-4 px-10 text-xl font-bold text-gray-600 pt-4"
       :text="project.name"
       :on-submit="renameProject"
+      :swal-option="swalOption(project.name)"
     />
     <EditorTab
       :programs="programs"
@@ -127,6 +128,16 @@ export default Vue.extend({
             updatedAt: res.updatedAt,
           })
         })
+    },
+
+    swalOption(name: string) {
+      return {
+        title: 'プロジェクト名を変更',
+        input: 'text',
+        inputValue: name,
+        text: name,
+        confirmButtonText: '変更',
+      }
     },
   },
 })
