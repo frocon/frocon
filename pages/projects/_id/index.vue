@@ -9,6 +9,7 @@
       :programs="programs"
       :selected-id="selectedId"
       :on-click-tab="onClickTab"
+      :on-submit-new-tab="onSubmitNewTab"
     />
     <Editor :source="source" :update-source="updateSource" />
   </div>
@@ -67,12 +68,13 @@ export default Vue.extend({
         name: '',
         updatedAt: new Date(),
       },
-      programs: {
-        id: '',
-        name: '',
-        source: '',
-        updatedAt: new Date(),
-      },
+      programs: [
+        {
+          id: '',
+          name: '',
+          updatedAt: new Date(),
+        },
+      ],
       tags: {
         id: '',
         name: '',
@@ -108,6 +110,23 @@ export default Vue.extend({
           program: { source },
         }
       )
+    },
+
+    onSubmitNewTab(programName: string) {
+      $axios
+        .$post(
+          `http://localhost:3000/api/projects/${this.$route.params.id}/programs`,
+          {
+            program: { name: programName },
+          }
+        )
+        .then((res) => {
+          this.programs.push({
+            id: res.id,
+            name: res.name,
+            updatedAt: res.updatedAt,
+          })
+        })
     },
   },
 })

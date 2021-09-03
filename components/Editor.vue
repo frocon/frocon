@@ -81,7 +81,7 @@ export default Vue.extend({
     }
   },
   methods: {
-    updateCode(code) {
+    updateCode(code: string) {
       this.code = code
     },
   },
