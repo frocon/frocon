@@ -1,9 +1,7 @@
 <template>
   <div>
     <div id="blocklyDiv" class="blocklyDiv"></div>
-    <xml ref="blocklyToolbox" style="display: none">
-      <slot></slot>
-    </xml>
+    <xml ref="blocklyToolbox" style="display: none"></xml>
   </div>
 </template>
 
@@ -12,12 +10,32 @@ import Blockly from 'blockly'
 export default {
   name: 'BlocklyComponent',
   props: {
-    options: Blockly.Options,
+    source: {
+      type: String,
+      required: true,
+    },
+    options: {
+      type: Object,
+      default: null,
+    },
+    updateCode: {
+      type: Function,
+      required: true,
+    },
+    updateSource: {
+      type: Function,
+      required: true,
+    },
   },
   data() {
     return {
       workspace: null,
     }
+  },
+  watch: {
+    source(source, _oldSource) {
+      this.updateWorkspace(source)
+    },
   },
   mounted() {
     const options = this.$props.options || {}
@@ -25,6 +43,21 @@ export default {
       options.toolbox = this.$refs.blocklyToolbox
     }
     this.workspace = Blockly.inject('blocklyDiv', options)
+    this.updateWorkspace(this.$props.source)
+    this.workspace.addChangeListener(() => {
+      this.$props.updateCode(Blockly.JavaScript.workspaceToCode(this.workspace))
+      const xml = Blockly.Xml.domToText(
+        Blockly.Xml.workspaceToDom(this.workspace)
+      )
+      this.$props.updateSource(xml)
+    })
+  },
+  methods: {
+    updateWorkspace(source) {
+      this.workspace.clear()
+      const dom = Blockly.Xml.textToDom(source)
+      Blockly.Xml.domToWorkspace(dom, this.workspace)
+    },
   },
 }
 </script>

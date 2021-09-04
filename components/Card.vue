@@ -1,5 +1,5 @@
 <template>
-  <div class="p-10">
+  <div class="p-10" @click="onClick()">
     <!--Card 1-->
     <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white pb-4">
       <div class="px-6 py-4">
@@ -38,7 +38,8 @@
 </template>
 
 <script lang="ts">
-export default {
+import Vue from 'vue'
+export default Vue.extend({
   name: 'Card',
   props: {
     project: {
@@ -57,5 +58,10 @@ export default {
       },
     },
   },
-}
+  methods: {
+    onClick() {
+      this.$router.push({ path: `projects/${this.$props.project.id}` })
+    },
+  },
+})
 </script>
