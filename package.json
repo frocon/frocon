@@ -32,7 +32,9 @@
     "multer": "^1.4.3",
     "nuxt": "^2.15.7",
     "sweetalert2": "^11.1.4",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "vuex-module-decorators": "^1.0.1",
+    "vuex-persistedstate": "^4.0.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.14.7",

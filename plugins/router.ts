@@ -1,11 +1,9 @@
-import { auth } from '@/infrastructures/firebase'
 import { Plugin, Context } from '@nuxt/types'
+import { userStore } from '@/store'
 
 const routerPlugin: Plugin = (context: Context) => {
-  context.app.router!.beforeEach(async (to, from, next) => {
-    const currentUser = await auth.currentUser
-    console.log(currentUser)
-    if (to.path !== '/login' && !currentUser) {
+  context.app.router!.beforeEach((to, _from, next) => {
+    if (to.path !== '/login' && !userStore.isLogin) {
       next({ path: '/login' })
     } else {
       next()

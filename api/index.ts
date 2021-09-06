@@ -1,4 +1,4 @@
-import express, { NextFunction } from 'express'
+import express from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import {
@@ -28,28 +28,36 @@ app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
-const wrap = (fn: (req: express.Request, res: express.Response, next: NextFunction) => Promise<void>) => {
-  return (req: express.Request, res: express.Response, next: NextFunction) => fn(req, res, next).catch((err) => {
-    if (err instanceof Errors.PermissionError) {
-      res.status(404).send({error: "権限がありません"})
-    } else if (err instanceof Errors.ValidationError) {
-      res.status(400).send({error: "不正な操作です"})
-    } else if (err instanceof Errors.AuthenticationError) {
-      res.status(401).send({error: "認証に失敗しました"})
-    }
-  })
+const wrap = (
+  fn: (req: express.Request, res: express.Response) => Promise<void>
+) => {
+  return (req: express.Request, res: express.Response) =>
+    fn(req, res).catch((err) => {
+      if (err instanceof Errors.PermissionError) {
+        res.status(404).send({ error: '権限がありません' })
+      } else if (err instanceof Errors.ValidationError) {
+        res.status(400).send({ error: '不正な操作です' })
+      } else if (err instanceof Errors.AuthenticationError) {
+        res.status(401).send({ error: err.message })
+      } else {
+        throw err
+      }
+    })
 }
 
-app.get('/projects', wrap(async (req: express.Request, res: express.Response, next: NextFunction) => {
-  const uid = await verifyIdToken(req)
-  const [userId, projects] = await getProjectsUseCase()
-  if (projects) res.json(projectsPresenter(userId, projects))
-}))
+app.get(
+  '/projects',
+  wrap(async (req: express.Request, res: express.Response) => {
+    const uid = await verifyIdToken(req)
+    const [userId, projects] = await getProjectsUseCase(uid)
+    if (projects) res.json(projectsPresenter(userId, projects))
+  })
+)
 
 app.get(
   '/projects/:projectId',
-  async (req: express.Request, res: express.Response, next: NextFunction) => {
-    const uid = await verifyIdToken(req)
+  async (req: express.Request, res: express.Response) => {
+    await verifyIdToken(req)
     const project = await getProjectUseCase(req.params.projectId)
     if (project) res.json(project)
   }
@@ -58,7 +66,7 @@ app.get(
 app.get(
   '/projects/:projectId/programs/:programId',
   async (req: express.Request, res: express.Response) => {
-    const uid = await verifyIdToken(req)
+    await verifyIdToken(req)
     const program = await getProgramUseCase(req.params.programId)
     if (program) res.json(programDetailPresenter(program))
   }
@@ -70,7 +78,8 @@ app.post(
     const uid = await verifyIdToken(req)
     const program = await createProgramUseCase(
       req.params.projectId,
-      req.body.program.name
+      req.body.program.name,
+      uid
     )
     res.json(programDetailPresenter(program))
   }
@@ -78,7 +87,7 @@ app.post(
 
 app.post('/projects', async (req: express.Request, res: express.Response) => {
   const uid = await verifyIdToken(req)
-  const result = await createProjectUseCase(req.body.project.name)
+  const result = await createProjectUseCase(req.body.project.name, uid)
   if (result) res.json(result)
 })
 
@@ -88,7 +97,8 @@ app.patch(
     const uid = await verifyIdToken(req)
     const result = await updateProjectUseCase(
       req.params.projectId,
-      req.body.project.name
+      req.body.project.name,
+      uid
     )
     if (result) res.json(projectDetailPresenter(result))
   }
@@ -105,7 +115,8 @@ app.patch(
     const program = await updateProgramNameUseCase(
       req.params.projectId,
       req.params.programId,
-      req.body.program.name
+      req.body.program.name,
+      uid
     )
     res.json(programUpdateNamePresenter(program))
   }
@@ -122,21 +133,11 @@ app.patch(
     const program = await updateProgramSourceUseCase(
       req.params.projectId,
       req.params.programId,
-      req.body.program.source
+      req.body.program.source,
+      uid
     )
     res.json(programUpdateSourcePresenter(program))
   }
 )
-
-// エラーハンドリング
-app.use((err: Error, req: express.Request, res: express.Response) => {
-  if (err instanceof Errors.PermissionError) {
-    res.status(404).send({error: "権限がありません"})
-  } else if (err instanceof Errors.ValidationError) {
-    res.status(400).send({error: "不正な操作です"})
-  } else if (err instanceof Errors.AuthenticationError) {
-    res.status(401).send({error: "認証に失敗しました"})
-  }
-})
 
 export default app

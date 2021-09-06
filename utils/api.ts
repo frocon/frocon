@@ -1,15 +1,14 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios'
-import { auth } from '@/infrastructures/firebase'
+import { userStore } from '@/store'
 
 let $axios: NuxtAxiosInstance // eslint-disable-line import/no-mutable-exports
 
 export function initializeAxios(axiosInstance: NuxtAxiosInstance) {
   $axios = axiosInstance
   $axios.interceptors.request.use(
-    async (config) => {
-      const currentUser = await auth.currentUser
-      if (currentUser)
-        config.headers.Authorization = await currentUser.getIdToken()
+    (config) => {
+      const uid = userStore.uid
+      if (uid) config.headers.Authorization = uid
       return config
     },
     (error) => {
