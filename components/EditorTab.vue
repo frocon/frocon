@@ -93,9 +93,9 @@ export default Vue.extend({
             { program: { name } }
           )
           .then((res) => {
-            const index = this.programs.findIndex(
-              (program) => program.id === programId
-            )
+            const index = (
+              this.programs as { id: string; name: string; updatedAt: Date }[]
+            ).findIndex((program) => program.id === programId)
             Vue.set(this.programs, index, res)
           })
       }

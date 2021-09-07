@@ -7,23 +7,28 @@ const getProgramUseCase = async (id: string) => {
   return await programRepository.findById(id)
 }
 
-const createProgramUseCase = async (projectId: string, name: string) => {
+const createProgramUseCase = async (
+  projectId: string,
+  name: string,
+  userIdToken: string
+) => {
   const projectRepository = new ProjectRepository()
   const userRepository = new UserRepository()
   const project = await projectRepository.findWithMembersAndPrograms(projectId)
-  const loginUser = await userRepository.findLoginUser()
+  const loginUser = await userRepository.findByIdToken(userIdToken)
   return await project.createProgram(name, loginUser)
 }
 
 const updateProgramNameUseCase = async (
   projectId: string,
   programId: string,
-  name: string
+  name: string,
+  userIdToken: string
 ) => {
   const projectRepository = new ProjectRepository()
   const userRepository = new UserRepository()
   const project = await projectRepository.findWithMembersAndPrograms(projectId)
-  const loginUser = await userRepository.findLoginUser()
+  const loginUser = await userRepository.findByIdToken(userIdToken)
 
   return await project.updateProgramName(programId, name, loginUser)
 }
@@ -31,12 +36,13 @@ const updateProgramNameUseCase = async (
 const updateProgramSourceUseCase = async (
   projectId: string,
   programId: string,
-  source: string
+  source: string,
+  userIdToken: string
 ) => {
   const projectRepository = new ProjectRepository()
   const userRepository = new UserRepository()
   const project = await projectRepository.findWithMembersAndPrograms(projectId)
-  const loginUser = await userRepository.findLoginUser()
+  const loginUser = await userRepository.findByIdToken(userIdToken)
 
   return await project.updateProgramSource(programId, source, loginUser)
 }

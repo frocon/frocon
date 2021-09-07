@@ -9,6 +9,7 @@ generator client {
 
 model User {
   id               String             @id @default(uuid())
+  firebaseIdToken  String             @unique
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
   email            String             @unique

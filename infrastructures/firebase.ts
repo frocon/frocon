@@ -23,4 +23,4 @@ const signOut = async () => {
   await signOutByFirebase(auth)
 }
 
-export { signUp, signIn, signOut }
+export { signUp, signIn, signOut, auth }
