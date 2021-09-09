@@ -2,6 +2,11 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import {
+  getUserUseCase,
+  createUserUseCase,
+  updateUserUseCase,
+} from './usecases/user'
+import {
   getProjectsUseCase,
   getProjectUseCase,
   createProjectUseCase,
@@ -88,6 +93,30 @@ app.post(
 app.post('/projects', async (req: express.Request, res: express.Response) => {
   const uid = await verifyIdToken(req)
   const result = await createProjectUseCase(req.body.project.name, uid)
+  if (result) res.json(result)
+})
+
+app.get(
+  '/users/:userId',
+  async (req: express.Request, res: express.Response) => {
+    const user = await getUserUseCase(req.params.userId)
+    res.json(user)
+  }
+)
+
+app.post('/users', async (req: express.Request, res: express.Response) => {
+  const uid = await verifyIdToken(req)
+  const result = await createUserUseCase(req.body.user.email, uid)
+  if (result) res.json(result)
+})
+
+app.patch('/users', async (req: express.Request, res: express.Response) => {
+  const uid = await verifyIdToken(req)
+  const result = await updateUserUseCase(
+    req.body.user.name,
+    req.body.user.email,
+    uid
+  )
   if (result) res.json(result)
 })
 
