@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({
+  rejectOnNotFound: true,
+})
 
 export default class UserRepository {
   async update(id: string, name: string, email: string, avatar: string) {
