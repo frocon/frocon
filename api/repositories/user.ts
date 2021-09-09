@@ -1,18 +1,22 @@
 import { PrismaClient } from '@prisma/client'
+import { User } from '../entities/user'
 
 const prisma = new PrismaClient({
   rejectOnNotFound: true,
 })
 
 export default class UserRepository {
-  async update(id: string, name: string, email: string, avatar: string) {
+  async update(
+    name: string | null,
+    avatar: string | null,
+    userIdToken: string
+  ) {
     return await prisma.user.update({
       where: {
-        id,
+        firebaseIdToken: userIdToken,
       },
       data: {
         name,
-        email,
         avatar,
       },
     })
@@ -26,17 +30,10 @@ export default class UserRepository {
     })
   }
 
-  async createNewUser(
-    name: string,
-    email: string,
-    avatar: string | null,
-    firebaseIdToken: string
-  ) {
+  async createNewUser(email: string, firebaseIdToken: string) {
     return await prisma.user.create({
       data: {
-        name,
         email,
-        avatar,
         firebaseIdToken,
       },
     })
@@ -74,10 +71,16 @@ export default class UserRepository {
   }
 
   async findByIdToken(idToken: string) {
-    return await prisma.user.findUnique({
+    const userByIdToken = prisma.user.findUnique({
       where: {
         firebaseIdToken: idToken,
       },
     })
+    const userEntity = new User(
+      (await userByIdToken).id,
+      (await userByIdToken).name,
+      (await userByIdToken).email
+    )
+    return userEntity
   }
 }
