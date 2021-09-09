@@ -1,5 +1,5 @@
 <template>
-  <pre class="p-4"><code v-html="highlight(code)" /></pre>
+  <pre class="p-4 text-2xl"><code v-html="highlight(code)" /></pre>
 </template>
 
 <script lang="ts">
