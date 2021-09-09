@@ -5,20 +5,20 @@ const getUserUseCase = async (id: string) => {
   return await projectRepository.findById(id)
 }
 
-const createUserUseCase = async (user: {
-  name: string
-  email: string
-  avatar: string | null
-  firebaseIdToken: string
-}) => {
+const createUserUseCase = async (email: string, firebaseIdToken: string) => {
   const userRepository = new UserRepository()
 
-  return await userRepository.createNewUser(
-    user.name,
-    user.email,
-    user.avatar,
-    user.firebaseIdToken
-  )
+  return await userRepository.createNewUser(email, firebaseIdToken)
 }
 
-export { getUserUseCase, createUserUseCase }
+const updateUserUseCase = async (
+  name: string | null,
+  avatar: string | null,
+  userIdToken: string
+) => {
+  const userRepository = new UserRepository()
+
+  return await userRepository.update(name, avatar, userIdToken)
+}
+
+export { getUserUseCase, createUserUseCase, updateUserUseCase }
