@@ -29,7 +29,7 @@ export default class UserRepository {
   async createNewUser(
     name: string,
     email: string,
-    avatar: string,
+    avatar: string | null,
     firebaseIdToken: string
   ) {
     return await prisma.user.create({
@@ -40,10 +40,6 @@ export default class UserRepository {
         firebaseIdToken,
       },
     })
-  }
-
-  async findLoginUser() {
-    return await prisma.user.findFirst({ orderBy: { id: 'asc' } })
   }
 
   async findById(id: string) {
