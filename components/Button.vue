@@ -1,0 +1,19 @@
+<template>
+  <button
+    class="
+      bg-accent
+      hover:bg-hover-accent
+      tracking-wide
+      transition
+      duration-200
+      text-white
+      font-semibold
+      text-lg
+      py-2
+      px-4
+      rounded
+    "
+  >
+    <slot />
+  </button>
+</template>

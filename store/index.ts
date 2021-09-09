@@ -1,23 +1,8 @@
-import { ActionTree, MutationTree } from 'vuex'
+import { Store } from 'vuex'
+import { initialiseStores } from '~/utils/store-accessor'
 
-type RootState = {
-  csrfToken: string
-}
+// Vuexのプラグインを利用して初期化する
+const initializer = (store: Store<any>) => initialiseStores(store)
+export const plugins = [initializer]
 
-export const state = (): RootState => ({
-  csrfToken: '',
-})
-
-export const mutations: MutationTree<RootState> = {
-  SET_CSRF_TOKEN(state, csrfToken) {
-    state.csrfToken = csrfToken
-  },
-}
-
-export const actions: ActionTree<RootState, RootState> = {
-  nuxtServerInit({ commit }, { req }) {
-    if (req.cookies) {
-      commit('SET_CSRF_TOKEN', req.csrfToken())
-    }
-  },
-}
+export * from '~/utils/store-accessor'

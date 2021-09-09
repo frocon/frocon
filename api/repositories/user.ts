@@ -3,70 +3,83 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export default class UserRepository {
+  async update(id: string, name: string, email: string, avatar: string) {
+    return await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        name,
+        email,
+        avatar,
+      },
+    })
+  }
 
-	async update(id: string, name: string, email: string, avatar: string) {
-		return await prisma.user.update({
-			where: {
-				id: id,
-			},
-			data: {
-				name,
-				email,
-				avatar,
-			}
-		})
-	}
+  async delete(id: string) {
+    return await prisma.user.delete({
+      where: {
+        id,
+      },
+    })
+  }
 
-	async delete(id: string) {
-		return await prisma.user.delete({
-			where: {
-				id: id,
-			}
-		})
-	}
+  async createNewUser(
+    name: string,
+    email: string,
+    avatar: string,
+    firebaseIdToken: string
+  ) {
+    return await prisma.user.create({
+      data: {
+        name,
+        email,
+        avatar,
+        firebaseIdToken,
+      },
+    })
+  }
 
-	async createNewUser(name: string, email: string, avatar: string) {
-		return await prisma.user.create({
-			data: {
-				name,
-				email,
-				avatar,
-			},
-		})
-	}
-
-	async findLoginUser() {
+  async findLoginUser() {
     return await prisma.user.findFirst({ orderBy: { id: 'asc' } })
-	}
+  }
 
-	async findById(id: string) {
+  async findById(id: string) {
     return await prisma.user.findUnique({
-			where: {
-					id: id,
-			},
-			select: {
-					id: true,
-					createdAt: true,
-					updatedAt: true,
-					name: true,
-					email: true,
-					avatar: true,
-					joinedProjects: {
-							select: {
-									id: true,
-									updatedAt: true,
-									projectId: true,
-									role: true,
-							},
-					},
-					likeProjects: {
-							select: {
-									id: true,
-									name: true,
-									updatedAt: true,
-							},
-					},
-			},
-	})
-	}
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        name: true,
+        email: true,
+        avatar: true,
+        joinedProjects: {
+          select: {
+            id: true,
+            updatedAt: true,
+            projectId: true,
+            role: true,
+          },
+        },
+        likeProjects: {
+          select: {
+            id: true,
+            name: true,
+            updatedAt: true,
+          },
+        },
+      },
+    })
+  }
+
+  async findByIdToken(idToken: string) {
+    return await prisma.user.findUnique({
+      where: {
+        firebaseIdToken: idToken,
+      },
+    })
+  }
 }

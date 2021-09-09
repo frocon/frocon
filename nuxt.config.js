@@ -1,6 +1,7 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
+    titleTemplate: 'frocon | %s',
     title: 'frocon',
     htmlAttrs: {
       lang: 'en',
@@ -15,10 +16,14 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [],
+  css: ['@/assets/css/tailwind.css', '@/assets/css/highlightjs.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+    '@/plugins/axios-accessor',
+    '@/plugins/router',
+    { src: '@/plugins/local-storage', ssr: false },
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -27,14 +32,14 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
+    '@nuxtjs/tailwindcss',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    // https://go.nuxtjs.dev/bootstrap
-    'bootstrap-vue/nuxt',
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/date-fns',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -42,7 +47,7 @@ export default {
     browserBaseURL: process.env.BASE_APP_URL || '/',
     requestInterceptor(config, { store }) {
       if (store.state.csrfToken) {
-        config.headers.common['x-csrf-token'] = store.state.csrfToken
+        // config.headers.common['x-csrf-token'] = store.state.csrfToken
       }
       return config
     },
@@ -52,4 +57,24 @@ export default {
   build: {},
 
   serverMiddleware: [{ path: '/api', handler: '~/api/index.ts' }],
+
+  // Vue configuration
+  vue: {
+    config: {
+      productionTip: false,
+      ignoredElements: [
+        'field',
+        'block',
+        'category',
+        'xml',
+        'mutation',
+        'value',
+        'sep',
+      ],
+      devtools: true,
+    },
+  },
+
+  // disable telemetry
+  telemetry: false,
 }
