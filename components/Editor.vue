@@ -1,6 +1,6 @@
 <template>
-  <div class="h-full">
-    <div class="h-4/5">
+  <div class="flex h-full w-full">
+    <div class="w-1/2">
       <BlocklyComponent
         id="blockly"
         :source="source"
@@ -10,7 +10,7 @@
         class="h-full"
       ></BlocklyComponent>
     </div>
-    <div class="h-1/5">
+    <div class="w-1/2">
       <Code :code="code" />
     </div>
   </div>
