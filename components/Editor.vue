@@ -11,9 +11,7 @@
       ></BlocklyComponent>
     </div>
     <div class="h-1/5">
-      <pre id="codeBlock" v-highlight>
-        <code class="javascript">{{ code }}</code>
-      </pre>
+      <Code :code="code" />
     </div>
   </div>
 </template>
