@@ -16,7 +16,7 @@ export default Vue.extend({
   },
   methods: {
     highlight(code: string) {
-      const html = highlightjs.highlightAuto(code, ['javascript']).value
+      const html = highlightjs.highlightAuto(code, ['python']).value
       console.log(html)
       return html
     },
