@@ -13,7 +13,7 @@ model User {
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
   email            String             @unique
-  name             String
+  name             String?
   avatar           String?
   joinedProjects   Membership[]
   likeProjects     Project[]
