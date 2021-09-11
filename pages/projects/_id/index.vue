@@ -82,6 +82,8 @@ export default Vue.extend({
       },
       selectedId: '',
       source: '',
+      connection: new WebSocket("wss://l0g0x3lf13.execute-api.ap-northeast-1.amazonaws.com/dev"),
+      showChild: true,
     }
   },
   head() {
@@ -111,6 +113,8 @@ export default Vue.extend({
           program: { source },
         }
       )
+      this.connection.send('update');
+      console.log('updateSource')
     },
 
     onSubmitNewTab(programName: string) {
@@ -139,6 +143,22 @@ export default Vue.extend({
         confirmButtonText: '変更',
       }
     },
+
+    async getProgram() {
+      this.source = await getSource(this.$route.params.id, this.selectedId)
+    },
+  },
+
+  created: function() {
+    this.connection.onopen = (event: any) => {
+      console.log(event)
+      console.log("Successfully connected to the echo WebSocket Server")
+    }
+    this.connection.onmessage = (event: any) => {
+      console.log('hogehoge')
+      console.log(event.data)
+      this.getProgram()
+    }
   },
 })
 </script>
