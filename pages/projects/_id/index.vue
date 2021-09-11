@@ -113,7 +113,7 @@ export default Vue.extend({
           program: { source },
         }
       )
-      this.connection.send('update');
+      this.connection.send('{ "action": "sendmessage", "data": "update"}');
       console.log('updateSource')
     },
 
