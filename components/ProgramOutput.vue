@@ -24,6 +24,22 @@ export default Vue.extend({
     }
   },
   watch: {
+    isCdnLoaded() {
+      window
+        .loadPyodide({
+          indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.18.0/full/',
+        })
+        .then((pyodide) => {
+          window.pyodide = pyodide
+          this.isPyodideLoaded = true
+        })
+        .catch((err) => {
+          console.log(err.toString())
+        })
+    },
+    isPyodideLoaded() {
+      this.runPython(this.$props.code)
+    },
     code(code) {
       this.runPython(code)
     },
@@ -41,20 +57,6 @@ export default Vue.extend({
   },
   methods: {
     runPython(code) {
-      if (this.isCdnLoaded && !window.pyodide) {
-        window
-          .loadPyodide({
-            indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.18.0/full/',
-          })
-          .then((pyodide) => {
-            window.pyodide = pyodide
-            this.isPyodideLoaded = true
-            this.runPython(this.$props.code)
-          })
-          .catch((err) => {
-            console.log(err.toString())
-          })
-      }
       if (this.isPyodideLoaded) {
         const prologue = `import sys\nimport io\nsys.stdout = io.StringIO()\n`
 
