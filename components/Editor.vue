@@ -1,7 +1,8 @@
 <template>
   <div class="flex h-full w-full">
     <div class="w-1/2">
-      <BlocklyComponent
+      <BlocklyComponent 
+        ref="blocklyComp" 
         id="blockly"
         :source="source"
         :options="options"
@@ -81,6 +82,10 @@ export default Vue.extend({
   methods: {
     updateCode(code: string) {
       this.code = code
+    },
+    updateGateway(source: string) {
+      // @ts-ignore
+      this.$refs.blocklyComp.whenIgnitionEventUpdate(source)
     },
   },
 })

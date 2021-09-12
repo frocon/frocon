@@ -7,6 +7,7 @@
 
 <script>
 import Blockly from 'blockly'
+
 export default {
   name: 'BlocklyComponent',
   props: {
@@ -44,12 +45,16 @@ export default {
     }
     this.workspace = Blockly.inject('blocklyDiv', options)
     this.updateWorkspace(this.$props.source)
-    this.workspace.addChangeListener(() => {
+    this.workspace.addChangeListener((event) => {
       this.$props.updateCode(Blockly.JavaScript.workspaceToCode(this.workspace))
       const xml = Blockly.Xml.domToText(
         Blockly.Xml.workspaceToDom(this.workspace)
       )
-      this.$props.updateSource(xml)
+      if (event.type == Blockly.Events.BLOCK_CHANGE) {
+        const eventJsonObject = event.toJson()
+        const eventJsonString = JSON.stringify(eventJsonObject)
+        this.$props.updateSource(xml, eventJsonString)
+      }
     })
   },
   methods: {
@@ -57,6 +62,11 @@ export default {
       this.workspace.clear()
       const dom = Blockly.Xml.textToDom(source)
       Blockly.Xml.domToWorkspace(dom, this.workspace)
+    },
+    whenIgnitionEventUpdate(changeCode) {
+      const codeObj = JSON.parse(changeCode)
+      const workspaceEvent = Blockly.Events.fromJson(codeObj, this.workspace)
+      workspaceEvent.run(true)
     },
   },
 }

@@ -12,12 +12,13 @@
       :on-click-tab="onClickTab"
       :on-submit-new-tab="onSubmitNewTab"
     />
-    <Editor :source="source" :update-source="updateSource" />
+    <Editor ref="editor" :source="source" :update-source="updateSource" />
   </div>
 </template>
 
 <script lang="ts">
 import { $axios } from '@/utils/api'
+import { userStore } from '@/store'
 import Vue from 'vue'
 
 const getSource = async (projectId: string, programId: string) => {
@@ -27,6 +28,24 @@ const getSource = async (projectId: string, programId: string) => {
   if (!program.source)
     return '<xml xmlns="https://developers.google.com/blockly/xml"></xml>'
   return program.source
+}
+
+const getSourceOnXMLHttpRequest = (projectId: string, programId: string): string => {
+  const xhr = new XMLHttpRequest();
+  const uid = userStore.uid
+  xhr.open("GET", `http://localhost:3000/api/projects/${projectId}/programs/${programId}`)
+  if (uid) xhr.setRequestHeader('Authorization', uid)
+  xhr.send()
+  xhr.onreadystatechange = () => {
+    if (xhr.status == 200) {
+      const jsonObj = JSON.parse(xhr.responseText)
+      console.log('Tanaka')
+      console.log(jsonObj.source)
+      return jsonObj.source
+    }
+  }
+  console.log('Tanaka2')
+  return 'No'
 }
 
 export default Vue.extend({
@@ -106,14 +125,14 @@ export default Vue.extend({
       this.source = await getSource(this.$route.params.id, selectedId)
     },
 
-    updateSource(source: string) {
+    updateSource(source: string, eventJsonString: string) {
       $axios.$patch(
         `http://localhost:3000/api/projects/${this.$route.params.id}/programs/${this.selectedId}/source`,
         {
           program: { source },
         }
       )
-      this.connection.send('{ "action": "sendmessage", "data": "update"}');
+      this.connection.send(`{ "action": "sendmessage", "data": "${eventJsonString}"}`);
       console.log('updateSource')
     },
 
@@ -144,8 +163,8 @@ export default Vue.extend({
       }
     },
 
-    async getProgram() {
-      this.source = await getSource(this.$route.params.id, this.selectedId)
+    getProgram(source: string) {
+      this.$refs.editor.updateGateway(source)
     },
   },
 
@@ -157,7 +176,7 @@ export default Vue.extend({
     this.connection.onmessage = (event: any) => {
       console.log('hogehoge')
       console.log(event.data)
-      this.getProgram()
+      this.getProgram(event.data)
     }
   },
 })
