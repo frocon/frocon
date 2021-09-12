@@ -1,6 +1,6 @@
 <template>
   <div class="max-h-full overflow-scroll">
-    <p class="p-4 text-xl">{{ output }}</p>
+    <pre class="p-4 text-xl">{{ output }}</pre>
   </div>
 </template>
 
@@ -19,23 +19,20 @@ export default Vue.extend({
     return {
       output: '',
       pyodide: null,
+      isCdnLoaded: false,
       isPyodideLoaded: false,
     }
   },
   watch: {
-    code (code) {
+    code(code) {
       this.runPython(code)
     },
   },
   mounted() {
     if (!window.loadPyodide) {
       const script = document.createElement('script')
-      script.onload = async () => {
-        window.pyodide = await window.loadPyodide({
-          indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.18.0/full/',
-        })
-        this.isPyodideLoaded = true
-        this.runPython(this.$props.code)
+      script.onload = () => {
+        this.isCdnLoaded = true
       }
       script.type = 'text/javascript'
       script.src = 'https://cdn.jsdelivr.net/pyodide/v0.18.0/full/pyodide.js'
@@ -44,7 +41,30 @@ export default Vue.extend({
   },
   methods: {
     runPython(code) {
-      if (this.isPyodideLoaded) this.output = window.pyodide.runPython(code)
+      if (this.isCdnLoaded && !window.pyodide) {
+        window
+          .loadPyodide({
+            indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.18.0/full/',
+          })
+          .then((pyodide) => {
+            window.pyodide = pyodide
+            this.isPyodideLoaded = true
+            this.runPython(this.$props.code)
+          })
+          .catch((err) => {
+            console.log(err.toString())
+          })
+      }
+      if (this.isPyodideLoaded) {
+        const prologue = `import sys\nimport io\nsys.stdout = io.StringIO()\n`
+
+        const epilogue = `sys.stdout.getvalue()\n`
+        const dict = pyodide.pyimport('dict')
+        this.output = window.pyodide.runPython(
+          prologue + code + epilogue,
+          dict()
+        )
+      }
     },
   },
 })
