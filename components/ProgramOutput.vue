@@ -33,9 +33,6 @@ export default Vue.extend({
           window.pyodide = pyodide
           this.isPyodideLoaded = true
         })
-        .catch((err) => {
-          console.log(err.toString())
-        })
     },
     isPyodideLoaded() {
       this.runPython(this.$props.code)
