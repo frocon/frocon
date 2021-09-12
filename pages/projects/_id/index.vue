@@ -85,7 +85,9 @@ export default Vue.extend({
     }
   },
   head() {
-    return { title: (this as any).project.name }
+    return {
+      title: (this as any).project.name,
+    }
   },
 
   methods: {

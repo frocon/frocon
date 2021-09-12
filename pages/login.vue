@@ -44,7 +44,7 @@ export default Vue.extend({
         .then(async ({ user }) => {
           const uid = await user.getIdToken()
           userStore.login(uid)
-          this.$router.push('/')
+          this.$router.push({ path: '/' })
         })
         .catch((error) => {
           this.error = error.message
