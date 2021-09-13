@@ -1,5 +1,5 @@
 <template>
-  <div class="container max-w-4xl mx-auto">
+  <!-- <div class="container max-w-4xl mx-auto">
     <div class="w-64">
       <p class="flex justify-between my-2">
         <label for="e-mail">E-mail</label>
@@ -22,12 +22,15 @@
         {{ error }}
       </p>
     </div>
-  </div>
+  </div> -->
+  <div id="firebaseui-auth-container"></div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import { signUp, signIn } from '@/infrastructures/firebase'
+// import * as firebaseui from 'firebaseui'
+import { EmailAuthProvider } from 'firebase/auth'
+import { auth, signUp, signIn } from '@/infrastructures/firebase'
 import { userStore } from '@/store'
 
 export default Vue.extend({
@@ -37,6 +40,15 @@ export default Vue.extend({
       password: '',
       error: '',
     }
+  },
+  created() {
+    if (!process.client) return
+    const firebaseui = require('firebaseui')
+    const ui = new firebaseui.auth.AuthUI(auth)
+    ui.start('#firebaseui-auth-container', {
+      signInOptions: [EmailAuthProvider.PROVIDER_ID],
+      signInSuccessUrl: '/',
+    })
   },
   methods: {
     signIn() {
