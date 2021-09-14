@@ -106,7 +106,11 @@ app.get(
 
 app.post('/users', async (req: express.Request, res: express.Response) => {
   const uid = await verifyIdToken(req)
-  const result = await createUserUseCase(req.body.user.email, uid)
+  const result = await createUserUseCase(
+    req.body.user.name,
+    req.body.user.email,
+    uid
+  )
   if (result) res.json(result)
 })
 

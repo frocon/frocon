@@ -1,10 +1,8 @@
 <template>
-  <div>
+  <div class="bg-primary">
     <Navbar />
-    <div class="h-full bg-primary">
-      <div class="container mx-auto">
-        <Nuxt />
-      </div>
+    <div class="container mx-auto">
+      <Nuxt />
     </div>
   </div>
 </template>

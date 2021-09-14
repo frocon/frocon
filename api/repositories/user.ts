@@ -30,13 +30,12 @@ export default class UserRepository {
     })
   }
 
-  async createNewUser(email: string, firebaseIdToken: string) {
-    const name = ''
+  async createNewUser(name: string, email: string, firebaseIdToken: string) {
     return await prisma.user.create({
       data: {
+        name,
         email,
         firebaseIdToken,
-        name,
       },
     })
   }

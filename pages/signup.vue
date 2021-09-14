@@ -14,6 +14,28 @@
     "
   >
     <div class="mb-4">
+      <label class="block text-grey-darker text-sm font-bold mb-2" for="name">
+        ユーザー名
+      </label>
+      <input
+        id="name"
+        v-model="name"
+        class="
+          shadow
+          appearance-none
+          border
+          rounded
+          w-full
+          py-2
+          px-3
+          text-grey-darker
+        "
+        type="text"
+        placeholder="Name"
+      />
+    </div>
+
+    <div class="mb-4">
       <label class="block text-grey-darker text-sm font-bold mb-2" for="email">
         Eメール
       </label>
@@ -64,8 +86,8 @@
       </p>
     </div>
     <div class="flex items-center justify-between">
-      <Button @click.native="signIn"> Sign in </Button>
-      <NuxtLink to="/signup"> アカウントをお持ちでない方 </NuxtLink>
+      <Button @click.native="signUp"> Sign up </Button>
+      <NuxtLink to="/login"> 既にアカウントをお持ちの方 </NuxtLink>
     </div>
   </div>
 </template>
@@ -73,29 +95,19 @@
 <script lang="ts">
 import Vue from 'vue'
 import { $axios } from '@/utils/api'
-import { signUp, signIn } from '@/infrastructures/firebase'
+import { signUp } from '@/infrastructures/firebase'
 import { userStore } from '@/store'
 
 export default Vue.extend({
   data() {
     return {
+      name: '',
       email: '',
       password: '',
       error: '',
     }
   },
   methods: {
-    signIn() {
-      signIn(this.email, this.password)
-        .then(async ({ user }) => {
-          const uid = await user.getIdToken()
-          userStore.login(uid)
-          this.$router.push({ path: '/' })
-        })
-        .catch((error) => {
-          this.error = error.message
-        })
-    },
     signUp() {
       signUp(this.email, this.password)
         .then(async ({ user }) => {
@@ -104,7 +116,7 @@ export default Vue.extend({
           await $axios
             .post(
               'http://localhost:3000/api/users',
-              { user: { email: user.email } },
+              { user: { name: this.name, email: user.email } },
               { headers: { Authorization: idToken } }
             )
             .then(() => {
