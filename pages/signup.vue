@@ -80,7 +80,6 @@
         type="password"
         placeholder="******************"
       />
-      <p class="text-red text-xs italic">Please choose a password.</p>
       <p v-show="error" class="text-red-500">
         {{ error }}
       </p>
