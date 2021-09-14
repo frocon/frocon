@@ -27,6 +27,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { $axios } from '@/utils/api'
 import { signUp, signIn } from '@/infrastructures/firebase'
 import { userStore } from '@/store'
 
@@ -52,7 +53,18 @@ export default Vue.extend({
     },
     signUp() {
       signUp(this.email, this.password)
-        .then(() => {
+        .then(async ({ user }) => {
+          const idToken = await user.getIdToken()
+          userStore.login(idToken)
+          await $axios
+            .post(
+              'http://localhost:3000/api/users',
+              { user: { email: user.email } },
+              { headers: { Authorization: idToken } }
+            )
+            .then(() => {
+              this.$router.push('/')
+            })
           this.$router.push('/')
         })
         .catch((error) => {
