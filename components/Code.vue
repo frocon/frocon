@@ -1,5 +1,7 @@
 <template>
-  <pre class="p-4 text-2xl"><code v-html="highlight(code)" /></pre>
+  <div class="max-h-full overflow-scroll">
+    <pre class="p-4 text-xl"><code v-html="highlight(code)" /></pre>
+  </div>
 </template>
 
 <script lang="ts">
@@ -16,8 +18,7 @@ export default Vue.extend({
   },
   methods: {
     highlight(code: string) {
-      const html = highlightjs.highlightAuto(code, ['javascript']).value
-      console.log(html)
+      const html = highlightjs.highlightAuto(code, ['python']).value
       return html
     },
   },

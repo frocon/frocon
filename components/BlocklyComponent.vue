@@ -7,6 +7,8 @@
 
 <script>
 import Blockly from 'blockly'
+import 'blockly/python'
+
 export default {
   name: 'BlocklyComponent',
   props: {
@@ -45,7 +47,7 @@ export default {
     this.workspace = Blockly.inject('blocklyDiv', options)
     this.updateWorkspace(this.$props.source)
     this.workspace.addChangeListener(() => {
-      this.$props.updateCode(Blockly.JavaScript.workspaceToCode(this.workspace))
+      this.$props.updateCode(Blockly.Python.workspaceToCode(this.workspace))
       const xml = Blockly.Xml.domToText(
         Blockly.Xml.workspaceToDom(this.workspace)
       )

@@ -71,16 +71,12 @@ export default class UserRepository {
   }
 
   async findByIdToken(idToken: string) {
-    const userByIdToken = prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         firebaseIdToken: idToken,
       },
     })
-    const userEntity = new User(
-      (await userByIdToken).id,
-      (await userByIdToken).name,
-      (await userByIdToken).email
-    )
+    const userEntity = new User(user.id, user.name, user.email)
     return userEntity
   }
 }
