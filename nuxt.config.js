@@ -46,7 +46,9 @@ export default {
       {
         config: firebaseConfig,
         services: {
-          auth: true,
+          auth: {
+            ssr: true,
+          },
         },
       },
     ],
