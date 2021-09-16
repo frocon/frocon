@@ -27,7 +27,8 @@
       "@nuxt/types",
       "@nuxtjs/axios",
       "@types/node",
-      "@nuxtjs/date-fns"
+      "@nuxtjs/date-fns",
+      "@nuxtjs/firebase",
     ],
     "resolveJsonModule": true
   },
