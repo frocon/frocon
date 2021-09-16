@@ -16,10 +16,6 @@ export default {
       type: String,
       required: true,
     },
-    options: {
-      type: Object,
-      default: null,
-    },
     updateCode: {
       type: Function,
       required: true,
