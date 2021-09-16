@@ -1,12 +1,13 @@
 import { Context, Middleware } from '@nuxt/types'
-import { auth } from '@/infrastructures/firebase'
-import { onAuthStateChanged } from '@firebase/auth'
+import firebase from 'firebase'
 
-const authMiddleware: Middleware = ({ route, redirect }: Context) => {
-  const unsubscribe = onAuthStateChanged(auth, (user) => {
-    if (!user) return redirect('/login')
-    if (route.path === '/login') return redirect('/')
-  })
+const authMiddleware: Middleware = ({ app, route, redirect }: Context) => {
+  const unsubscribe = app.$fire.auth.onAuthStateChanged(
+    (user: firebase.User) => {
+      if (!user) return redirect('/login')
+      if (route.path === '/login') return redirect('/')
+    }
+  )
   unsubscribe()
 }
 
