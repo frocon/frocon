@@ -27,8 +27,6 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { signUp, signIn } from '@/infrastructures/firebase'
-import { userStore } from '@/store'
 
 export default Vue.extend({
   data() {
@@ -40,22 +38,22 @@ export default Vue.extend({
   },
   methods: {
     signIn() {
-      signIn(this.email, this.password)
-        .then(async ({ user }) => {
-          const uid = await user.getIdToken()
-          userStore.login(uid)
+      ;(this as any).$fire.auth
+        .signInWithEmailAndPassword(this.email, this.password)
+        .then(() => {
           this.$router.push({ path: '/' })
         })
-        .catch((error) => {
+        .catch((error: Error) => {
           this.error = error.message
         })
     },
     signUp() {
-      signUp(this.email, this.password)
+      ;(this as any).$fire.auth
+        .createUserWithEmailAndPassword(this.email, this.password)
         .then(() => {
           this.$router.push('/')
         })
-        .catch((error) => {
+        .catch((error: Error) => {
           this.error = error.message
         })
     },
