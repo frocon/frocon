@@ -1,3 +1,5 @@
+import firebaseConfig from './infrastructures/firebaseConfig.json'
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -39,6 +41,15 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     '@nuxtjs/date-fns',
+    [
+      '@nuxtjs/firebase',
+      {
+        config: firebaseConfig,
+        services: {
+          auth: true,
+        },
+      },
+    ],
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
