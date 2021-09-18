@@ -17,7 +17,6 @@ export default Vue.extend({
   },
   methods: {
     onClickCreateProject() {
-      console.log('pushed')
       Swal.fire({
         title: 'プロジェクトを作成',
         input: 'text',

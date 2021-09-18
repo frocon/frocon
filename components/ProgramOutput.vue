@@ -53,14 +53,27 @@ export default Vue.extend({
     }
   },
   methods: {
-    runPython(code) {
+    setLineno(code) {
+      const splittedCode = code.split('\n')
+      let statementCount = 0
+      const replaced = splittedCode.map((line, index) => {
+        if (line.trim().startsWith('await js.highlightLine')) {
+          return line.replace(
+            /%lineno/,
+            (index - statementCount++ * 2).toString()
+          )
+        }
+        return line
+      })
+      return replaced.join('\n')
+    },
+    async runPython(code) {
       if (this.isPyodideLoaded) {
-        const prologue = `import sys\nimport io\nsys.stdout = io.StringIO()\n`
-
+        const prologue = `import js\nimport sys\nimport io\nsys.stdout = io.StringIO()\n`
         const epilogue = `sys.stdout.getvalue()\n`
         const dict = pyodide.pyimport('dict')
-        this.output = window.pyodide.runPython(
-          prologue + code + epilogue,
+        this.output = await window.pyodide.runPythonAsync(
+          prologue + this.setLineno(code) + epilogue,
           dict()
         )
       }

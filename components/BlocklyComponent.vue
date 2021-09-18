@@ -8,6 +8,7 @@
 <script>
 import Blockly from 'blockly'
 import 'blockly/python'
+import options from '@/blockly/options'
 
 export default {
   name: 'BlocklyComponent',
@@ -36,10 +37,10 @@ export default {
     },
   },
   mounted() {
-    const options = this.$props.options || {}
     if (!options.toolbox) {
       options.toolbox = this.$refs.blocklyToolbox
     }
+    Blockly.Python.STATEMENT_PREFIX = `await js.highlightLine(%lineno)\njs.highlightBlock(%1)\n`
     this.workspace = Blockly.inject('blocklyDiv', options)
     this.updateWorkspace(this.$props.source)
     this.workspace.addChangeListener(() => {
@@ -49,6 +50,10 @@ export default {
       )
       this.$props.updateSource(xml)
     })
+
+    window.highlightBlock = (id) => {
+      this.workspace.highlightBlock(id)
+    }
   },
   methods: {
     updateWorkspace(source) {
