@@ -57,10 +57,16 @@ export default Vue.extend({
       const splittedCode = code.split('\n')
       let statementCount = 0
       const replaced = splittedCode.map((line, index) => {
-        if (line.trim().startsWith('await js.highlightLine')) {
+        if (line.trim().startsWith('js.highlightLine')) {
+          if (splittedCode[index + 2].trim().startsWith('await js.nextStep')) {
+            return line.replace(
+              /%lineno/,
+              (index + 1 - ++statementCount * 3).toString()
+            )
+          }
           return line.replace(
             /%lineno/,
-            (index - statementCount++ * 2).toString()
+            (index - statementCount++ * 3).toString()
           )
         }
         return line
@@ -69,7 +75,7 @@ export default Vue.extend({
     },
     async runPython(code) {
       if (this.isPyodideLoaded) {
-        const prologue = `import js\nimport sys\nimport io\nsys.stdout = io.StringIO()\n`
+        const prologue = `import js\nimport sys\nimport io\nsys.stdout = io.StringIO()\nawait js.nextStep()\n`
         const epilogue = `sys.stdout.getvalue()\n`
         const dict = pyodide.pyimport('dict')
         this.output = await window.pyodide.runPythonAsync(

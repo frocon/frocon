@@ -40,7 +40,8 @@ export default {
     if (!options.toolbox) {
       options.toolbox = this.$refs.blocklyToolbox
     }
-    Blockly.Python.STATEMENT_PREFIX = `await js.highlightLine(%lineno)\njs.highlightBlock(%1)\n`
+    Blockly.Python.STATEMENT_PREFIX = `js.highlightLine(%lineno)\njs.highlightBlock(%1)\n`
+    Blockly.Python.STATEMENT_SUFFIX = `await js.nextStep()\n`
     this.workspace = Blockly.inject('blocklyDiv', options)
     this.updateWorkspace(this.$props.source)
     this.workspace.addChangeListener(() => {

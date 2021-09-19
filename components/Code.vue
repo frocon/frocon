@@ -35,17 +35,22 @@ export default Vue.extend({
           .filter((line: string) => {
             const trimmed = line.trim()
             return !(
-              trimmed.startsWith('js.highlightBlock') ||
-              trimmed.startsWith('await js.highlightLine')
+              trimmed.startsWith('js.highlight') ||
+              trimmed.startsWith('await js.nextStep')
             )
           })
           .join('\n')
       )
     },
+    highlighted(highlighted: string) {
+      const output = this.$refs.output as Element
+      if (output) {
+        output.innerHTML = highlighted
+      }
+    },
   },
   mounted() {
-    ;(window as any).highlightLine = async (index: number) => {
-      await this.nextStep()
+    ;(window as any).highlightLine = (index: number) => {
       const emptyIndex: number[] = []
       let emptyCount = 0
       const splitted = this.highlighted
@@ -58,16 +63,22 @@ export default Vue.extend({
         })
       splitted[index] =
         '<span class="highlight-bg">' + splitted[index] + '</span>'
-      const output = this.$refs.output as Element
       const joined = splitted
         .map((line: string, index: number) => {
-          if (emptyIndex.includes(index)) return line + '\n'
+          if (emptyIndex.includes(index)) {
+            return line + '\n'
+          }
           return line
         })
         .join('\n')
+      const output = this.$refs.output as Element
       if (output) {
         output.innerHTML = joined
       }
+    }
+
+    ;(window as any).nextStep = async () => {
+      await this.nextStep()
     }
   },
   methods: {
