@@ -47,7 +47,6 @@ export default Vue.extend({
 
   methods: {
     redirectToProject(projectId) {
-      console.log(projectId)
       this.$router.push(`/projects/${projectId}`)
     },
   },
