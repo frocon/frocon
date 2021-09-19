@@ -1,8 +1,10 @@
 <template>
-  <div>
-    <Navbar />
-    <Nuxt />
-  </div>
+  <client-only>
+    <div>
+      <Navbar />
+      <Nuxt />
+    </div>
+  </client-only>
 </template>
 
 <style>
