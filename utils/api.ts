@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios'
-import { userStore } from '@/store'
+import { state } from '@/store'
 
 let $axios: NuxtAxiosInstance // eslint-disable-line import/no-mutable-exports
 
@@ -7,8 +7,8 @@ export function initializeAxios(axiosInstance: NuxtAxiosInstance) {
   $axios = axiosInstance
   $axios.interceptors.request.use(
     (config) => {
-      const uid = userStore.uid
-      if (uid) config.headers.Authorization = uid
+      const idToken = state().authUser!.uid
+      if (idToken) config.headers.Authorization = idToken
       return config
     },
     (error) => {
