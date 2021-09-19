@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-export const state = () => ({
+export const state = (): any => ({
   authUser: null,
 })
 
@@ -49,6 +49,7 @@ export const mutations = {
       displayName: authUser.displayName,
       photoURL: claims.picture,
       isAdmin: claims.admin,
+      idToken: authUser.idToken,
     }
   },
 }
