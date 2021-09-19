@@ -7,6 +7,7 @@ export const state = (): any => ({
 type State = ReturnType<typeof state>
 
 export const getters = {
+  authUser: (state: State) => state.authUser,
   isLoggedIn: (state: State) => !!state.authUser,
 }
 
@@ -43,13 +44,13 @@ export const mutations = {
   },
   SET_USER(state: State, { authUser, claims }) {
     state.authUser = {
+      idToken: authUser.Aa,
       uid: authUser.uid,
       email: authUser.email,
       emailVerified: authUser.emailVerified,
       displayName: authUser.displayName,
       photoURL: claims.picture,
       isAdmin: claims.admin,
-      idToken: authUser.idToken,
     }
   },
 }
