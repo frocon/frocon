@@ -41,12 +41,16 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     '@nuxtjs/date-fns',
+    '@nuxtjs/pwa',
     [
       '@nuxtjs/firebase',
       {
         config: firebaseConfig,
         services: {
           auth: {
+            initialize: {
+              onAuthStateChangedAction: 'onAuthStateChanged',
+            },
             ssr: true,
           },
         },
@@ -92,5 +96,12 @@ export default {
 
   router: {
     middleware: ['auth'],
+  },
+
+  pwa: {
+    meta: false,
+    icon: false,
+    workbox: { importScript: ['/firebase-auth-sw.js'] },
+    dev: true,
   },
 }
