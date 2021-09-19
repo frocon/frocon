@@ -38,20 +38,35 @@ export default Vue.extend({
   },
   methods: {
     signIn() {
-      ;(this as any).$fire.auth
+      this.$fire.auth
         .signInWithEmailAndPassword(this.email, this.password)
-        .then(() => {
-          this.$router.push({ path: '/' })
+        .then((res) => {
+          if (!res || !res.user) return
+          res.user.getIdToken(true).then((idToken: any) => {
+            localStorage.setItem('access_token', idToken.toString())
+            localStorage.setItem(
+              'refresh_token',
+              res!.user!.refreshToken.toString()
+            )
+            this.$router.push('/')
+          })
         })
         .catch((error: Error) => {
           this.error = error.message
         })
     },
-    signUp() {
-      ;(this as any).$fire.auth
+    async signUp() {
+      await this.$fire.auth
         .createUserWithEmailAndPassword(this.email, this.password)
-        .then(() => {
-          this.$router.push('/')
+        .then(async (res) => {
+          if (!res || !res.user) return
+          const idToken = await res.user.getIdToken(true)
+
+          localStorage.setItem('access_token', idToken.toString())
+          localStorage.setItem(
+            'refresh_token',
+            res.user.refreshToken.toString()
+          )
         })
         .catch((error: Error) => {
           this.error = error.message
