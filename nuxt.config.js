@@ -42,20 +42,7 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/date-fns',
     '@nuxtjs/pwa',
-    [
-      '@nuxtjs/firebase',
-      {
-        config: firebaseConfig,
-        services: {
-          auth: {
-            initialize: {
-              onAuthStateChangedAction: 'onAuthStateChanged',
-            },
-            ssr: true,
-          },
-        },
-      },
-    ],
+    '@nuxtjs/firebase',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -98,10 +85,27 @@ export default {
     middleware: ['auth'],
   },
 
+  firebase: {
+    config: firebaseConfig,
+    services: {
+      auth: {
+        persistence: 'local',
+        initialize: {
+          onAuthStateChangedAction: 'onAuthStateChanged',
+        },
+        ssr: true,
+      },
+    },
+  },
+
   pwa: {
     meta: false,
     icon: false,
-    workbox: { importScript: ['/firebase-auth-sw.js'] },
-    dev: true,
+
+    workbox: {
+      importScripts: ['/firebase-auth-sw.js'],
+
+      dev: true,
+    },
   },
 }
