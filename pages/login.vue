@@ -27,6 +27,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { $axios } from '@/utils/api'
 
 export default Vue.extend({
   data() {
@@ -37,19 +38,19 @@ export default Vue.extend({
     }
   },
   methods: {
-    signIn() {
-      this.$fire.auth
+    async signIn() {
+      await this.$fire.auth
         .signInWithEmailAndPassword(this.email, this.password)
-        .then((res) => {
+        .then(async (res) => {
           if (!res || !res.user) return
-          res.user.getIdToken(true).then((idToken: any) => {
-            localStorage.setItem('access_token', idToken.toString())
-            localStorage.setItem(
-              'refresh_token',
-              res!.user!.refreshToken.toString()
-            )
-            this.$router.push('/')
-          })
+          const idToken = await res.user.getIdToken(true)
+
+          localStorage.setItem('access_token', idToken.toString())
+          localStorage.setItem(
+            'refresh_token',
+            res.user.refreshToken.toString()
+          )
+          this.$router.push('/')
         })
         .catch((error: Error) => {
           this.error = error.message
@@ -67,6 +68,10 @@ export default Vue.extend({
             'refresh_token',
             res.user.refreshToken.toString()
           )
+          await $axios.$post('http://localhost:3000/api/users', {
+            user: res.user,
+          })
+          this.$router.push('/')
         })
         .catch((error: Error) => {
           this.error = error.message
