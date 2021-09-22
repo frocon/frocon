@@ -1,3 +1,5 @@
+import firebaseConfig from './infrastructures/firebaseConfig.json'
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -39,6 +41,8 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     '@nuxtjs/date-fns',
+    '@nuxtjs/pwa',
+    '@nuxtjs/firebase',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -76,4 +80,32 @@ export default {
 
   // disable telemetry
   telemetry: false,
+
+  router: {
+    middleware: ['auth'],
+  },
+
+  firebase: {
+    config: firebaseConfig,
+    services: {
+      auth: {
+        persistence: 'local',
+        initialize: {
+          onAuthStateChangedAction: 'onAuthStateChanged',
+        },
+        ssr: true,
+      },
+    },
+  },
+
+  pwa: {
+    meta: false,
+    icon: false,
+
+    workbox: {
+      importScripts: ['/firebase-auth-sw.js'],
+
+      dev: true,
+    },
+  },
 }

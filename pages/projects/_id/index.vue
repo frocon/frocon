@@ -1,7 +1,7 @@
 <template>
   <div class="h-5/6">
     <EditableText
-      class="pt-4 px-10 text-xl font-bold text-gray-600 pt-4"
+      class="pt-4 px-10 text-xl font-bold text-gray-600"
       :text="project.name"
       :on-submit="renameProject"
       :swal-option="swalOption(project.name)"

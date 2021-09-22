@@ -1,12 +1,14 @@
 <template>
-  <div>
-    <Navbar />
-    <div class="h-full bg-primary">
-      <div class="container mx-auto">
-        <Nuxt />
+  <client-only>
+    <div>
+      <Navbar />
+      <div class="h-full bg-primary">
+        <div class="container mx-auto">
+          <Nuxt />
+        </div>
       </div>
     </div>
-  </div>
+  </client-only>
 </template>
 
 <style>
