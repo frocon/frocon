@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { Role } from '@/api/entities/member'
+import { Role } from '../entities/member'
 
 const prisma = new PrismaClient({ rejectOnNotFound: true })
 

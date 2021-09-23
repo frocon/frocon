@@ -1,4 +1,4 @@
-import MemberCollectionRepository from '@/api/repositories/membership'
+import MemberCollectionRepository from '../repositories/membership'
 
 export const createMembershipUseCase = async (
   projectId: string,
