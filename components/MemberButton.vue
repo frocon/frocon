@@ -31,6 +31,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue'
 import Swal from 'sweetalert2'
+import { $axios } from '~/utils/api'
 interface User {
   name: string
 }
@@ -80,6 +81,38 @@ export default Vue.extend({
             </tbody>
           </table>
         </div>`,
+        confirmButtonText: '招待する',
+        confirmButtonColor: '#33CAB1',
+        cancelButtonText: '閉じる',
+        showCancelButton: true,
+      }).then((result) => {
+        if (!result.isConfirmed) return
+        Swal.fire({
+          title: 'メンバー招待',
+          inputLabel: '招待したいメンバーのメールアドレスを入力してください',
+          input: 'email',
+        }).then((result) => {
+          if (!result.value) return
+          const email = result.value
+          const projectId = this.$route.params.id
+          $axios
+            .post(
+              `http://localhost:3000/api/projects/${projectId}/membership`,
+              { email }
+            )
+            .then(() => {
+              Swal.fire({
+                title: '追加されました',
+                icon: 'success',
+              })
+            })
+            .catch(() => {
+              Swal.fire({
+                title: '失敗しました',
+                icon: 'error',
+              })
+            })
+        })
       })
     },
   },
