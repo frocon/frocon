@@ -1,11 +1,14 @@
 <template>
   <div class="h-5/6">
-    <EditableText
-      class="pt-4 px-10 text-xl font-bold text-gray-600"
-      :text="project.name"
-      :on-submit="renameProject"
-      :swal-option="swalOption(project.name)"
-    />
+    <div class="flex justify-between">
+      <EditableText
+        class="pt-4 px-10 text-xl font-bold text-gray-600"
+        :text="project.name"
+        :on-submit="renameProject"
+        :swal-option="swalOption(project.name)"
+      />
+      <MemberButton :members="project.members" />
+    </div>
     <EditorTab
       :programs="programs"
       :selected-id="selectedId"
@@ -40,6 +43,7 @@ export default Vue.extend({
       id: res.id,
       name: res.name,
       updatedAt: new Date(res.updatedAt),
+      members: res.members,
     }
     const programs = res.programs.map(
       (program: { id: string; name: string; updatedAt: Date }) => {
