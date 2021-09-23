@@ -12,13 +12,11 @@
 </template>
 
 <style>
+html,
 body,
-html {
-  height: 100%;
-}
 div#__nuxt,
 #__layout,
 #__layout > div {
-  height: 100%;
+  height: 100vh !important;
 }
 </style>

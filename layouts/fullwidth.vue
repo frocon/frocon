@@ -8,9 +8,11 @@
 </template>
 
 <style>
+html,
+body,
 div#__nuxt,
 #__layout,
 #__layout > div {
-  height: 100%;
+  height: 100vh !important;
 }
 </style>
