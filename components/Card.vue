@@ -1,5 +1,5 @@
 <template>
-  <div class="p-10" @click="onClick()">
+  <div class="p-10" @click="onClick">
     <!--Card 1-->
     <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white pb-4">
       <div class="px-6 py-4">
