@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue'
 
 export default Vue.extend({
@@ -32,27 +32,27 @@ export default Vue.extend({
     this.$props.setEvalute(this.getEvalute())
   },
   mounted() {
-    if (!window.pyodide) {
-      window
+    if (!(window as any).pyodide) {
+      ;(window as any)
         .loadPyodide({
           indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.18.0/full/',
         })
-        .then((pyodide) => {
+        .then((pyodide: any) => {
           this.isPyodideLoaded = true
-          window.pyodide = pyodide
+          ;(window as any).pyodide = pyodide
         })
     } else {
       this.isPyodideLoaded = true
     }
-    window.print = (text) => {
+    ;(window as any).print = (text: string) => {
       this.output += text + '\n'
     }
   },
   methods: {
-    setLineno(code) {
+    setLineno(code: string) {
       const splittedCode = code.split('\n')
       let statementCount = 0
-      const replaced = splittedCode.map((line, index) => {
+      const replaced = splittedCode.map((line: string, index: number) => {
         if (line.trim().startsWith('js.highlightLine')) {
           if (splittedCode[index + 2].trim().startsWith('await js.nextStep')) {
             return line.replace(
@@ -74,8 +74,8 @@ export default Vue.extend({
         if (this.isPyodideLoaded) {
           const code = this.$props.code
           const prologue = `import js\nimport sys\nimport io\nsys.stdout = io.StringIO()\nawait js.nextStep()\n`
-          const dict = pyodide.globals.get('dict')
-          await window.pyodide.runPythonAsync(
+          const dict = (window as any).pyodide.globals.get('dict')
+          await (window as any).pyodide.runPythonAsync(
             prologue + this.setLineno(code),
             dict()
           )

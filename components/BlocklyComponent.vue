@@ -5,13 +5,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Blockly from 'blockly'
-import 'blockly/python'
+import * as BlocklyPython from 'blockly/python'
 import '@/blockly/blocks'
 import options from '@/blockly/options'
+import Vue from 'vue'
 
-export default {
+export default Vue.extend({
   name: 'BlocklyComponent',
   props: {
     source: {
@@ -27,44 +28,49 @@ export default {
       required: true,
     },
   },
-  data() {
+  data(): {
+    workspace: (Blockly.Workspace & Blockly.WorkspaceSvg) | null
+  } {
     return {
       workspace: null,
     }
   },
   watch: {
-    source(source, _oldSource) {
+    source(source: string) {
       this.updateWorkspace(source)
     },
   },
   mounted() {
-    if (!options.toolbox) {
-      options.toolbox = this.$refs.blocklyToolbox
-    }
-    Blockly.Python.STATEMENT_PREFIX = `js.highlightLine(%lineno)\njs.highlightBlock(%1)\n`
-    Blockly.Python.STATEMENT_SUFFIX = `await js.nextStep()\n`
+    /* eslint-disable no-import-assign */
+    Object.assign(BlocklyPython, {
+      STATEMENT_PREFIX: `js.highlightLine(%lineno)\njs.highlightBlock(%1)\n`,
+    })
+    Object.assign(BlocklyPython, { STATEMENT_SUFFIX: `await js.nextStep()\n` })
+    /* eslint-disable no-import-assign */
     this.workspace = Blockly.inject('blocklyDiv', options)
     this.updateWorkspace(this.$props.source)
     this.workspace.addChangeListener(() => {
-      this.$props.updateCode(Blockly.Python.workspaceToCode(this.workspace))
+      if (!this.workspace) return
+      this.$props.updateCode(BlocklyPython.workspaceToCode(this.workspace))
       const xml = Blockly.Xml.domToText(
         Blockly.Xml.workspaceToDom(this.workspace)
       )
       this.$props.updateSource(xml)
     })
-
-    window.highlightBlock = (id) => {
+    ;(window as any).highlightBlock = (id: string) => {
+      if (!this.workspace) return
       this.workspace.highlightBlock(id)
     }
   },
   methods: {
-    updateWorkspace(source) {
+    updateWorkspace(source: string) {
+      if (!this.workspace) return
       this.workspace.clear()
       const dom = Blockly.Xml.textToDom(source)
       Blockly.Xml.domToWorkspace(dom, this.workspace)
     },
   },
-}
+})
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
