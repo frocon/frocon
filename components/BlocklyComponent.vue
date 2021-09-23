@@ -8,6 +8,7 @@
 <script>
 import Blockly from 'blockly'
 import 'blockly/python'
+import '@/blockly/blocks'
 import options from '@/blockly/options'
 
 export default {

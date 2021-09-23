@@ -1,6 +1,9 @@
 <template>
-  <div class="max-h-full overflow-scroll">
-    <pre class="p-4 text-xl">{{ output }}</pre>
+  <div>
+    <Button @click.native="clearOutput">出力をクリア</Button>
+    <div class="max-h-full overflow-scroll">
+      <pre class="p-4 text-xl">{{ output }}</pre>
+    </div>
   </div>
 </template>
 
@@ -14,42 +17,35 @@ export default Vue.extend({
       type: String,
       required: true,
     },
+    setEvalute: {
+      type: Function,
+      required: true,
+    },
   },
   data() {
     return {
       output: '',
-      pyodide: null,
-      isCdnLoaded: false,
       isPyodideLoaded: false,
     }
   },
-  watch: {
-    isCdnLoaded() {
+  created() {
+    this.$props.setEvalute(this.getEvalute())
+  },
+  mounted() {
+    if (!window.pyodide) {
       window
         .loadPyodide({
           indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.18.0/full/',
         })
         .then((pyodide) => {
-          window.pyodide = pyodide
           this.isPyodideLoaded = true
+          window.pyodide = pyodide
         })
-    },
-    isPyodideLoaded() {
-      this.runPython(this.$props.code)
-    },
-    code(code) {
-      this.runPython(code)
-    },
-  },
-  mounted() {
-    if (!window.loadPyodide) {
-      const script = document.createElement('script')
-      script.onload = () => {
-        this.isCdnLoaded = true
-      }
-      script.type = 'text/javascript'
-      script.src = 'https://cdn.jsdelivr.net/pyodide/v0.18.0/full/pyodide.js'
-      document.head.appendChild(script)
+    } else {
+      this.isPyodideLoaded = true
+    }
+    window.print = (text) => {
+      this.output += text + '\n'
     }
   },
   methods: {
@@ -73,16 +69,21 @@ export default Vue.extend({
       })
       return replaced.join('\n')
     },
-    async runPython(code) {
-      if (this.isPyodideLoaded) {
-        const prologue = `import js\nimport sys\nimport io\nsys.stdout = io.StringIO()\nawait js.nextStep()\n`
-        const epilogue = `sys.stdout.getvalue()\n`
-        const dict = pyodide.pyimport('dict')
-        this.output = await window.pyodide.runPythonAsync(
-          prologue + this.setLineno(code) + epilogue,
-          dict()
-        )
+    getEvalute() {
+      return async () => {
+        if (this.isPyodideLoaded) {
+          const code = this.$props.code
+          const prologue = `import js\nimport sys\nimport io\nsys.stdout = io.StringIO()\nawait js.nextStep()\n`
+          const dict = pyodide.globals.get('dict')
+          await window.pyodide.runPythonAsync(
+            prologue + this.setLineno(code),
+            dict()
+          )
+        }
       }
+    },
+    clearOutput() {
+      this.output = ''
     },
   },
 })

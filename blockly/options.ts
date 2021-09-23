@@ -33,7 +33,7 @@ const options = {
   <category name="文字列" colour="%{BKY_TEXTS_HUE}">
   <block type="text"></block>
   <block type="text_length"></block>
-  <block type="text_print"></block>
+  <block type="print"></block>
   </category>
   <category name="変数" custom="VARIABLE" colour="%{BKY_VARIABLES_HUE}">
   </category>

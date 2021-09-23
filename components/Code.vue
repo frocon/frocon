@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Button @click.native="onClickStepExecution">ステップ実行</Button>
     <div class="max-h-full overflow-scroll">
       <pre class="p-4 text-xl"><code ref="output" /></pre>
     </div>
@@ -18,39 +17,37 @@ export default Vue.extend({
       type: String,
       required: true,
     },
+    isStepExecution: {
+      type: Boolean,
+      default: false,
+    },
+    setResolveNextStep: {
+      type: Function,
+      required: true,
+    },
   },
   data() {
     return {
       highlighted: '',
-      stepExecutionFlag: true,
       resolveNextStep: () => {},
     }
   },
   watch: {
     code(code: string) {
       // ハイライトに関する関数は表示しない
-      this.highlighted = this.highlight(
-        code
-          .split('\n')
-          .filter((line: string) => {
-            const trimmed = line.trim()
-            return !(
-              trimmed.startsWith('js.highlight') ||
-              trimmed.startsWith('await js.nextStep')
-            )
-          })
-          .join('\n')
-      )
+      this.highlighted = this.highlight(code)
     },
     highlighted(highlighted: string) {
-      const output = this.$refs.output as Element
-      if (output) {
-        output.innerHTML = highlighted
-      }
+      this.displayHighlightedCode(highlighted)
+    },
+    isStepExecution(isStepExecution: boolean) {
+      if (!isStepExecution) this.displayHighlightedCode(this.highlighted)
     },
   },
   mounted() {
+    this.highlighted = this.highlight(this.$props.code)
     ;(window as any).highlightLine = (index: number) => {
+      if (!this.$props.isStepExecution) return
       const emptyIndex: number[] = []
       let emptyCount = 0
       const splitted = this.highlighted
@@ -71,29 +68,44 @@ export default Vue.extend({
           return line
         })
         .join('\n')
-      const output = this.$refs.output as Element
-      if (output) {
-        output.innerHTML = joined
-      }
+      this.displayHighlightedCode(joined)
     }
-
     ;(window as any).nextStep = async () => {
+      if (!this.$props.isStepExecution) return
       await this.nextStep()
     }
   },
   methods: {
     highlight(code: string): string {
-      return highlightjs.highlightAuto(code, ['python']).value
+      return highlightjs.highlightAuto(
+        code
+          .split('\n')
+          .filter((line: string) => {
+            const trimmed = line.trim()
+            return !(
+              trimmed.startsWith('js.highlight') ||
+              trimmed.startsWith('await js.nextStep')
+            )
+          })
+          .join('\n'),
+        ['python']
+      ).value
     },
     async nextStep() {
       return await new Promise<void>((resolve) => {
-        this.resolveNextStep = () => {
+        this.$props.setResolveNextStep(() => {
           resolve()
-        }
+        })
       })
     },
     onClickStepExecution() {
       this.resolveNextStep()
+    },
+    displayHighlightedCode(highlightedCode: string) {
+      const output = this.$refs.output as Element
+      if (output) {
+        output.innerHTML = highlightedCode
+      }
     },
   },
 })
