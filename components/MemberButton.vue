@@ -68,16 +68,18 @@ export default Vue.extend({
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-              ${this.members.map(
-                (member: Member) =>
-                  `<tr>
+              ${this.members
+                .map(
+                  (member: Member) =>
+                    `<tr>
                       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${member.user.name}</td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${member.role}</td>
                       <!-- <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <a href="#" class="text-indigo-600 hover:text-indigo-900">削除</a>
                       </td> -->
                     </tr>`
-              )}
+                )
+                .join('')}
             </tbody>
           </table>
         </div>`,
