@@ -15,6 +15,12 @@ export default {
       { name: 'format-detection', content: 'telephone=no' },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    script: [
+      {
+        type: 'text/javascript',
+        src: 'https://cdn.jsdelivr.net/pyodide/v0.18.0/full/pyodide.js',
+      },
+    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css

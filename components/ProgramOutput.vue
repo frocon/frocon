@@ -1,10 +1,13 @@
 <template>
-  <div class="max-h-full overflow-scroll">
-    <pre class="p-4 text-xl">{{ output }}</pre>
+  <div>
+    <Button @click.native="clearOutput">出力をクリア</Button>
+    <div class="max-h-full overflow-scroll">
+      <pre class="p-4 text-xl">{{ output }}</pre>
+    </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue'
 
 export default Vue.extend({
@@ -14,56 +17,73 @@ export default Vue.extend({
       type: String,
       required: true,
     },
+    setEvalute: {
+      type: Function,
+      required: true,
+    },
   },
   data() {
     return {
       output: '',
-      pyodide: null,
-      isCdnLoaded: false,
       isPyodideLoaded: false,
     }
   },
-  watch: {
-    isCdnLoaded() {
-      window
+  created() {
+    this.$props.setEvalute(this.getEvalute())
+  },
+  mounted() {
+    if (!(window as any).pyodide) {
+      ;(window as any)
         .loadPyodide({
           indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.18.0/full/',
         })
-        .then((pyodide) => {
-          window.pyodide = pyodide
+        .then((pyodide: any) => {
           this.isPyodideLoaded = true
+          ;(window as any).pyodide = pyodide
         })
-    },
-    isPyodideLoaded() {
-      this.runPython(this.$props.code)
-    },
-    code(code) {
-      this.runPython(code)
-    },
-  },
-  mounted() {
-    if (!window.loadPyodide) {
-      const script = document.createElement('script')
-      script.onload = () => {
-        this.isCdnLoaded = true
-      }
-      script.type = 'text/javascript'
-      script.src = 'https://cdn.jsdelivr.net/pyodide/v0.18.0/full/pyodide.js'
-      document.head.appendChild(script)
+    } else {
+      this.isPyodideLoaded = true
+    }
+    ;(window as any).print = (text: string) => {
+      this.output += text + '\n'
     }
   },
   methods: {
-    runPython(code) {
-      if (this.isPyodideLoaded) {
-        const prologue = `import sys\nimport io\nsys.stdout = io.StringIO()\n`
-
-        const epilogue = `sys.stdout.getvalue()\n`
-        const dict = pyodide.pyimport('dict')
-        this.output = window.pyodide.runPython(
-          prologue + code + epilogue,
-          dict()
-        )
+    setLineno(code: string) {
+      const splittedCode = code.split('\n')
+      let statementCount = 0
+      const replaced = splittedCode.map((line: string, index: number) => {
+        if (line.trim().startsWith('js.highlightLine')) {
+          if (splittedCode[index + 2].trim().startsWith('await js.nextStep')) {
+            return line.replace(
+              /%lineno/,
+              (index + 1 - ++statementCount * 3).toString()
+            )
+          }
+          return line.replace(
+            /%lineno/,
+            (index - statementCount++ * 3).toString()
+          )
+        }
+        return line
+      })
+      return replaced.join('\n')
+    },
+    getEvalute() {
+      return async () => {
+        if (this.isPyodideLoaded) {
+          const code = this.$props.code
+          const prologue = `import js\nimport sys\nimport io\nsys.stdout = io.StringIO()\nawait js.nextStep()\n`
+          const dict = (window as any).pyodide.globals.get('dict')
+          await (window as any).pyodide.runPythonAsync(
+            prologue + this.setLineno(code),
+            dict()
+          )
+        }
       }
+    },
+    clearOutput() {
+      this.output = ''
     },
   },
 })
