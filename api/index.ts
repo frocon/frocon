@@ -171,13 +171,13 @@ app.patch(
 )
 
 app.post(
-  'projects/:projectId/membership',
+  '/projects/:projectId/membership',
   async (req: express.Request, res: express.Response) => {
     await verifyIdToken(req)
     const { email } = req.body
     const { projectId } = req.params
-    const result = await createMembershipUseCase(email, projectId)
-    if (result) res.json(result)
+    const result = await createMembershipUseCase(projectId, email)
+    res.json(result)
   }
 )
 
