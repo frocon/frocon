@@ -18,20 +18,7 @@ import Vue from 'vue'
 export default Vue.extend({
   data() {
     return {
-      projects: [
-        {
-          id: '',
-          name: '',
-          updatedAt: new Date(),
-          role: '',
-          tags: [
-            {
-              id: '',
-              name: '',
-            },
-          ],
-        },
-      ],
+      projects: [],
     }
   },
 

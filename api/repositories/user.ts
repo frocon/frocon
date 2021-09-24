@@ -79,4 +79,15 @@ export default class UserRepository {
     const userEntity = new User(user.id, user.name, user.email)
     return userEntity
   }
+
+  async findByEmail(email: string) {
+    return await prisma.user.findUnique({
+      where: {
+        email,
+      },
+      select: {
+        id: true,
+      },
+    })
+  }
 }

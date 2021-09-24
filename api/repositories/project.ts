@@ -102,6 +102,18 @@ export default class ProjectRepository implements ProjectRepositoryInterface {
             updatedAt: true,
           },
         },
+        members: {
+          select: {
+            id: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            role: true,
+          },
+        },
       },
     })
   }

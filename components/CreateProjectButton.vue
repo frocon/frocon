@@ -12,7 +12,7 @@ export default Vue.extend({
   props: {
     onSubmit: {
       type: Function,
-      rquired: true,
+      required: true,
     },
   },
   methods: {
