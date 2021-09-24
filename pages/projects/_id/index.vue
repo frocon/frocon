@@ -36,23 +36,23 @@ export default Vue.extend({
   layout: 'fullwidth',
 
   async asyncData({ params }) {
-    const res = await $axios.$get(
+    const res = await $axios.get(
       `http://localhost:3000/api/projects/${params.id}`
     )
     const project = {
-      id: res.id,
-      name: res.name,
-      updatedAt: new Date(res.updatedAt),
-      members: res.members,
+      id: res.data.id,
+      name: res.data.name,
+      updatedAt: new Date(res.data.updatedAt),
+      members: res.data.members,
     }
-    const programs = res.programs.map(
+    const programs = res.data.programs.map(
       (program: { id: string; name: string; updatedAt: Date }) => {
         program.updatedAt = new Date(program.updatedAt)
         return program
       }
     )
 
-    const tags = res.tags
+    const tags = res.data.tags
     const selectedId = programs.length > 0 ? programs[0].id : null
 
     const source =
