@@ -1,8 +1,8 @@
 <template>
   <client-only>
-    <div>
+    <div class="bg-primary">
       <Navbar />
-      <div class="h-full bg-primary">
+      <div class="h-full">
         <div class="container mx-auto">
           <Nuxt />
         </div>
