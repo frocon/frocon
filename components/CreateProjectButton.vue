@@ -27,7 +27,7 @@ export default Vue.extend({
         allowOutSideClick: () => !Swal.isLoading(),
       }).then(async (result) => {
         if (result.isConfirmed) {
-          const res = await $axios.post('http://localhost:3000/api/projects', {
+          const res = await $axios.post('api/projects', {
             project: { name: result.value },
           })
           this.$props.onSubmit(res.data.id)

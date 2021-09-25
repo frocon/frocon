@@ -99,6 +99,27 @@ export default Vue.extend({
           this.error = error.message
         })
     },
+    async signUp() {
+      await this.$fire.auth
+        .createUserWithEmailAndPassword(this.email, this.password)
+        .then(async (res) => {
+          if (!res || !res.user) return
+          const idToken = await res.user.getIdToken(true)
+
+          localStorage.setItem('access_token', idToken.toString())
+          localStorage.setItem(
+            'refresh_token',
+            res.user.refreshToken.toString()
+          )
+          await $axios.$post('api/users', {
+            user: res.user,
+          })
+          this.$router.push('/')
+        })
+        .catch((error: Error) => {
+          this.error = error.message
+        })
+    },
   },
 })
 </script>
