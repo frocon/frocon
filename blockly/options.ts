@@ -34,6 +34,7 @@ const options = {
   <block type="text"></block>
   <block type="text_length"></block>
   <block type="print"></block>
+  <block type="concat_string"></block>
   </category>
   <category name="変数" custom="VARIABLE" colour="%{BKY_VARIABLES_HUE}">
   </category>
