@@ -49,13 +49,15 @@ export default Vue.extend({
     /* eslint-disable no-import-assign */
     this.workspace = Blockly.inject('blocklyDiv', options)
     this.updateWorkspace(this.$props.source)
-    this.workspace.addChangeListener(() => {
+    this.workspace.addChangeListener((event: any) => {
       if (!this.workspace) return
-      this.$props.updateCode(BlocklyPython.workspaceToCode(this.workspace))
-      const xml = Blockly.Xml.domToText(
-        Blockly.Xml.workspaceToDom(this.workspace)
-      )
-      this.$props.updateSource(xml)
+      if (!event.isUiEvent) {
+        this.$props.updateCode(BlocklyPython.workspaceToCode(this.workspace))
+        const xml = Blockly.Xml.domToText(
+          Blockly.Xml.workspaceToDom(this.workspace)
+        )
+        this.$props.updateSource(xml)
+      }
     })
     ;(window as any).highlightBlock = (id: string) => {
       if (!this.workspace) return
