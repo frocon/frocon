@@ -68,7 +68,7 @@ export default Vue.extend({
             'refresh_token',
             res.user.refreshToken.toString()
           )
-          await $axios.$post('http://localhost:3000/api/users', {
+          await $axios.$post('api/users', {
             user: res.user,
           })
           this.$router.push('/')

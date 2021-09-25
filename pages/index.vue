@@ -23,7 +23,7 @@ export default Vue.extend({
   },
 
   created() {
-    $axios.$get('http://localhost:3000/api/projects').then((res) => {
+    $axios.$get('api/projects').then((res) => {
       this.projects = res.map((project) => {
         project.updatedAt = new Date(project.updatedAt)
         project.role = translateRoleString(project.role)
