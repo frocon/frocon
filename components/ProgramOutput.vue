@@ -50,7 +50,7 @@ export default Vue.extend({
   },
   methods: {
     setLineno(code: string) {
-      const splittedCode = code.split('\n')
+      const splittedCode = code.split('\n').filter((line: string) => line)
       let statementCount = 0
       const replaced = splittedCode.map((line: string, index: number) => {
         if (line.trim().startsWith('js.highlightLine')) {
