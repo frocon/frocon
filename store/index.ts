@@ -20,7 +20,7 @@ export const actions = {
     }
 
     if (authUser && claims) {
-      await this.$router.push('/profile')
+      await this.$router.push('/')
     }
 
     commit('SET_USER', { authUser, claims })

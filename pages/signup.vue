@@ -14,6 +14,28 @@
     "
   >
     <div class="mb-4">
+      <label class="block text-grey-darker text-sm font-bold mb-2" for="name">
+        ユーザー名
+      </label>
+      <input
+        id="name"
+        v-model="name"
+        class="
+          shadow
+          appearance-none
+          border
+          rounded
+          w-full
+          py-2
+          px-3
+          text-grey-darker
+        "
+        type="text"
+        placeholder="Name"
+      />
+    </div>
+
+    <div class="mb-4">
       <label class="block text-grey-darker text-sm font-bold mb-2" for="email">
         Eメール
       </label>
@@ -63,42 +85,26 @@
       </p>
     </div>
     <div class="flex items-center justify-between">
-      <Button @click.native="signIn"> Sign in </Button>
-      <NuxtLink to="/signup"> アカウントをお持ちでない方 </NuxtLink>
+      <Button @click.native="signUp"> Sign up </Button>
+      <NuxtLink to="/login"> 既にアカウントをお持ちの方 </NuxtLink>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import { $axios } from '@/utils/api'
 
 export default Vue.extend({
   data() {
     return {
+      name: '',
       email: '',
       password: '',
       error: '',
     }
   },
   methods: {
-    async signIn() {
-      await this.$fire.auth
-        .signInWithEmailAndPassword(this.email, this.password)
-        .then(async (res) => {
-          if (!res || !res.user) return
-          const idToken = await res.user.getIdToken(true)
-
-          localStorage.setItem('access_token', idToken.toString())
-          localStorage.setItem(
-            'refresh_token',
-            res.user.refreshToken.toString()
-          )
-          this.$router.push('/')
-        })
-        .catch((error: Error) => {
-          this.error = error.message
-        })
-    },
     async signUp() {
       await this.$fire.auth
         .createUserWithEmailAndPassword(this.email, this.password)
@@ -111,7 +117,7 @@ export default Vue.extend({
             'refresh_token',
             res.user.refreshToken.toString()
           )
-          await $axios.$post('api/users', {
+          await $axios.$post('http://localhost:3000/api/users', {
             user: res.user,
           })
           this.$router.push('/')
