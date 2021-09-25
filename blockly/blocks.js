@@ -2,7 +2,7 @@ import Blockly from 'blockly'
 import 'blockly/python'
 
 Blockly.Blocks.print = {
-  init () {
+  init() {
     this.appendValueInput('text').setCheck(null).appendField('print')
     this.setInputsInline(false)
     this.setPreviousStatement(true, null)
