@@ -11,7 +11,7 @@ type ProjectWithMembersAndProgramsFactoryParams = {
   programs: Array<{
     id: string
     name: string | null
-    path: string | null
+    source: string | null
     updatedAt: Date
   }>
   members: Array<{
