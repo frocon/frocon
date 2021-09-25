@@ -55,10 +55,6 @@ export default class ProgramRepository implements ProgramRepositoryInterface {
       },
     })
 
-    // if (program.source === null)
-    //  throw new Error('Program.pathが初期化されていません')
-    // writeSource(program.source, source)
-
     const { updatedAt } = await prisma.program.update({
       where: {
         id: programId,
