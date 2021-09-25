@@ -55,5 +55,5 @@ model Program {
   project   Project  @relation(fields: [projectId], references: [id])
   projectId String
   name      String?
-  path      String
+  source    String?
 }

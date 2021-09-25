@@ -1,8 +1,6 @@
 import { PrismaClient } from '@prisma/client'
-import { v4 as uuidv4 } from 'uuid'
 import { ProgramRepositoryInterface } from '../entities/interface'
 import { Program } from '../entities/program'
-import { readSource, writeSource } from '../infrastructures/program'
 
 const prisma = new PrismaClient({ rejectOnNotFound: true })
 
@@ -14,7 +12,7 @@ export default class ProgramRepository implements ProgramRepositoryInterface {
       },
     })
 
-    const source = program.path === null ? '' : readSource(program.path)
+    const source = program.source === null ? '' : program.source
     return new Program(program.id, program.name, source, program.updatedAt)
   }
 
@@ -22,7 +20,7 @@ export default class ProgramRepository implements ProgramRepositoryInterface {
     const program = await prisma.program.create({
       data: {
         name,
-        path: uuidv4(),
+        source: '',
         project: {
           connect: {
             id: projectId,
@@ -55,16 +53,13 @@ export default class ProgramRepository implements ProgramRepositoryInterface {
       },
     })
 
-    if (program.path === null)
-      throw new Error('Program.pathが初期化されていません')
-    writeSource(program.path, source)
-
     const { updatedAt } = await prisma.program.update({
       where: {
         id: programId,
       },
       data: {
         updatedAt: new Date(),
+        source,
       },
     })
 
