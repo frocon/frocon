@@ -53,7 +53,7 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    browserBaseURL: process.env.BASE_APP_URL || '/',
+    browserBaseURL: process.env.BASE_APP_URL || 'http://localhost:3000/',
     requestInterceptor(config, { store }) {
       if (store.state.csrfToken) {
         // config.headers.common['x-csrf-token'] = store.state.csrfToken

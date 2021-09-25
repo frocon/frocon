@@ -25,7 +25,7 @@ import Vue from 'vue'
 
 const getSource = async (projectId: string, programId: string) => {
   const program = await $axios.$get(
-    `http://localhost:3000/api/projects/${projectId}/programs/${programId}`
+    `api/projects/${projectId}/programs/${programId}`
   )
   if (!program.source)
     return '<xml xmlns="https://developers.google.com/blockly/xml"></xml>'
@@ -36,9 +36,7 @@ export default Vue.extend({
   layout: 'fullwidth',
 
   async asyncData({ params }) {
-    const res = await $axios.get(
-      `http://localhost:3000/api/projects/${params.id}`
-    )
+    const res = await $axios.get(`api/projects/${params.id}`)
     const project = {
       id: res.data.id,
       name: res.data.name,
