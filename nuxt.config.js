@@ -114,4 +114,8 @@ export default {
       dev: true,
     },
   },
+
+  server: {
+    host: '0',
+  },
 }
