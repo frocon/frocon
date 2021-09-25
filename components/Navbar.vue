@@ -2,9 +2,9 @@
   <nav
     class="
       font-sans
-      flex flex-col
+      flex
+      justify-between
       text-center
-      sm:flex-row sm:text-left sm:justify-between
       py-4
       px-6
       bg-main
@@ -15,7 +15,7 @@
   >
     <div class="mb-2 sm:mb-0">
       <a href="/" class="text-2xl no-underline text-white font-semibold"
-        >frocon</a
+        >ふろこん！</a
       >
     </div>
     <div>

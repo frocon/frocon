@@ -1,3 +1,5 @@
+import firebaseConfig from './infrastructures/firebaseConfig.json'
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -13,6 +15,12 @@ export default {
       { name: 'format-detection', content: 'telephone=no' },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    script: [
+      {
+        type: 'text/javascript',
+        src: 'https://cdn.jsdelivr.net/pyodide/v0.18.0/full/pyodide.js',
+      },
+    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -39,6 +47,8 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     '@nuxtjs/date-fns',
+    '@nuxtjs/pwa',
+    '@nuxtjs/firebase',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -76,4 +86,32 @@ export default {
 
   // disable telemetry
   telemetry: false,
+
+  router: {
+    middleware: ['auth'],
+  },
+
+  firebase: {
+    config: firebaseConfig,
+    services: {
+      auth: {
+        persistence: 'local',
+        initialize: {
+          onAuthStateChangedAction: 'onAuthStateChanged',
+        },
+        ssr: true,
+      },
+    },
+  },
+
+  pwa: {
+    meta: false,
+    icon: false,
+
+    workbox: {
+      importScripts: ['/firebase-auth-sw.js'],
+
+      dev: true,
+    },
+  },
 }

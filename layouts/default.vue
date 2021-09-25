@@ -1,20 +1,22 @@
 <template>
-  <div class="bg-primary">
-    <Navbar />
-    <div class="container mx-auto">
-      <Nuxt />
+  <client-only>
+    <div class="bg-primary">
+      <Navbar />
+      <div class="h-full">
+        <div class="container mx-auto">
+          <Nuxt />
+        </div>
+      </div>
     </div>
-  </div>
+  </client-only>
 </template>
 
 <style>
+html,
 body,
-html {
-  height: 100%;
-}
 div#__nuxt,
 #__layout,
 #__layout > div {
-  height: 100%;
+  height: 100vh !important;
 }
 </style>

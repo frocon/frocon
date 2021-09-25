@@ -12,12 +12,11 @@ export default Vue.extend({
   props: {
     onSubmit: {
       type: Function,
-      rquired: true,
+      required: true,
     },
   },
   methods: {
     onClickCreateProject() {
-      console.log('pushed')
       Swal.fire({
         title: 'プロジェクトを作成',
         input: 'text',

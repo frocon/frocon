@@ -18,20 +18,7 @@ import Vue from 'vue'
 export default Vue.extend({
   data() {
     return {
-      projects: [
-        {
-          id: '',
-          name: '',
-          updatedAt: new Date(),
-          role: '',
-          tags: [
-            {
-              id: '',
-              name: '',
-            },
-          ],
-        },
-      ],
+      projects: [],
     }
   },
 
@@ -47,7 +34,6 @@ export default Vue.extend({
 
   methods: {
     redirectToProject(projectId) {
-      console.log(projectId)
       this.$router.push(`/projects/${projectId}`)
     },
   },

@@ -1,14 +1,17 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios'
-import { userStore } from '@/store'
+import { Store } from 'vuex'
 
 let $axios: NuxtAxiosInstance // eslint-disable-line import/no-mutable-exports
 
-export function initializeAxios(axiosInstance: NuxtAxiosInstance) {
+export function initializeAxios(
+  axiosInstance: NuxtAxiosInstance,
+  store: Store<any>
+) {
   $axios = axiosInstance
   $axios.interceptors.request.use(
     (config) => {
-      const uid = userStore.uid
-      if (uid) config.headers.Authorization = uid
+      const idToken = store.getters.authUser.idToken
+      if (idToken) config.headers.Authorization = idToken
       return config
     },
     (error) => {

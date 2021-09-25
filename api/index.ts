@@ -18,6 +18,7 @@ import {
   updateProgramNameUseCase,
   updateProgramSourceUseCase,
 } from './usecases/program'
+import { createMembershipUseCase } from './usecases/membership'
 import {
   programDetailPresenter,
   programUpdateNamePresenter,
@@ -170,6 +171,17 @@ app.patch(
       uid
     )
     res.json(programUpdateSourcePresenter(program))
+  }
+)
+
+app.post(
+  '/projects/:projectId/membership',
+  async (req: express.Request, res: express.Response) => {
+    await verifyIdToken(req)
+    const { email } = req.body
+    const { projectId } = req.params
+    const result = await createMembershipUseCase(projectId, email)
+    res.json(result)
   }
 )
 

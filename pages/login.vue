@@ -71,9 +71,6 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { $axios } from '@/utils/api'
-import { signUp, signIn } from '@/infrastructures/firebase'
-import { userStore } from '@/store'
 
 export default Vue.extend({
   data() {
@@ -84,34 +81,21 @@ export default Vue.extend({
     }
   },
   methods: {
-    signIn() {
-      signIn(this.email, this.password)
-        .then(async ({ user }) => {
-          const uid = await user.getIdToken()
-          userStore.login(uid)
-          this.$router.push({ path: '/' })
-        })
-        .catch((error) => {
-          this.error = error.message
-        })
-    },
-    signUp() {
-      signUp(this.email, this.password)
-        .then(async ({ user }) => {
-          const idToken = await user.getIdToken()
-          userStore.login(idToken)
-          await $axios
-            .post(
-              'http://localhost:3000/api/users',
-              { user: { email: user.email } },
-              { headers: { Authorization: idToken } }
-            )
-            .then(() => {
-              this.$router.push('/')
-            })
+    async signIn() {
+      await this.$fire.auth
+        .signInWithEmailAndPassword(this.email, this.password)
+        .then(async (res) => {
+          if (!res || !res.user) return
+          const idToken = await res.user.getIdToken(true)
+
+          localStorage.setItem('access_token', idToken.toString())
+          localStorage.setItem(
+            'refresh_token',
+            res.user.refreshToken.toString()
+          )
           this.$router.push('/')
         })
-        .catch((error) => {
+        .catch((error: Error) => {
           this.error = error.message
         })
     },

@@ -1,11 +1,14 @@
 <template>
   <div class="h-5/6">
-    <EditableText
-      class="pt-4 px-10 text-xl font-bold text-gray-600 pt-4"
-      :text="project.name"
-      :on-submit="renameProject"
-      :swal-option="swalOption(project.name)"
-    />
+    <div class="flex justify-between">
+      <EditableText
+        class="pt-4 px-10 text-xl font-bold text-gray-600"
+        :text="project.name"
+        :on-submit="renameProject"
+        :swal-option="swalOption(project.name)"
+      />
+      <MemberButton :members="project.members" />
+    </div>
     <EditorTab
       :programs="programs"
       :selected-id="selectedId"
@@ -33,22 +36,23 @@ export default Vue.extend({
   layout: 'fullwidth',
 
   async asyncData({ params }) {
-    const res = await $axios.$get(
+    const res = await $axios.get(
       `http://localhost:3000/api/projects/${params.id}`
     )
     const project = {
-      id: res.id,
-      name: res.name,
-      updatedAt: new Date(res.updatedAt),
+      id: res.data.id,
+      name: res.data.name,
+      updatedAt: new Date(res.data.updatedAt),
+      members: res.data.members,
     }
-    const programs = res.programs.map(
+    const programs = res.data.programs.map(
       (program: { id: string; name: string; updatedAt: Date }) => {
         program.updatedAt = new Date(program.updatedAt)
         return program
       }
     )
 
-    const tags = res.tags
+    const tags = res.data.tags
     const selectedId = programs.length > 0 ? programs[0].id : null
 
     const source =
