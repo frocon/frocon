@@ -25,7 +25,7 @@ import Vue from 'vue'
 
 const getSource = async (projectId: string, programId: string) => {
   const program = await $axios.$get(
-    `api/projects/${projectId}/programs/${programId}`
+    `/api/projects/${projectId}/programs/${programId}`
   )
   if (!program.source)
     return '<xml xmlns="https://developers.google.com/blockly/xml"></xml>'
@@ -95,7 +95,7 @@ export default Vue.extend({
   methods: {
     renameProject(name: string) {
       $axios
-        .$patch(`api/projects/${this.$route.params.id}`, {
+        .$patch(`/api/projects/${this.$route.params.id}`, {
           project: { name },
         })
         .then((res) => {
@@ -110,7 +110,7 @@ export default Vue.extend({
 
     updateSource(source: string) {
       $axios.$patch(
-        `api/projects/${this.$route.params.id}/programs/${this.selectedId}/source`,
+        `/api/projects/${this.$route.params.id}/programs/${this.selectedId}/source`,
         {
           program: { source },
         }
@@ -120,7 +120,7 @@ export default Vue.extend({
     onSubmitNewTab(programName: string) {
       $axios
         .$post(
-          `api/projects/${this.$route.params.id}/programs`,
+          `/api/projects/${this.$route.params.id}/programs`,
           {
             program: { name: programName },
           }

@@ -89,7 +89,7 @@ export default Vue.extend({
       return (name: string) => {
         $axios
           .$patch(
-            `api/projects/${this.$route.params.id}/programs/${programId}/name`,
+            `/api/projects/${this.$route.params.id}/programs/${programId}/name`,
             { program: { name } }
           )
           .then((res) => {

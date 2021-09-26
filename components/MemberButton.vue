@@ -98,7 +98,7 @@ export default Vue.extend({
           const email = result.value
           const projectId = this.$route.params.id
           $axios
-            .post(`api/projects/${projectId}/membership`, { email })
+            .post(`/api/projects/${projectId}/membership`, { email })
             .then(() => {
               Swal.fire({
                 title: '追加されました',
