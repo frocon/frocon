@@ -7,7 +7,11 @@ const authMiddleware: Middleware = ({ store, route, redirect }: Context) => {
     route.path !== '/login'
   )
     return redirect('/login')
-  if (route.path === '/login' || route.path === '/signup') return redirect('/')
+  if (
+    store.getters.isLoggedIn &&
+    (route.path === '/login' || route.path === '/signup')
+  )
+    return redirect('/')
 }
 
 export default authMiddleware
