@@ -95,7 +95,7 @@ export default Vue.extend({
   methods: {
     renameProject(name: string) {
       $axios
-        .$patch(`http://localhost:3000/api/projects/${this.$route.params.id}`, {
+        .$patch(`api/projects/${this.$route.params.id}`, {
           project: { name },
         })
         .then((res) => {
@@ -110,7 +110,7 @@ export default Vue.extend({
 
     updateSource(source: string) {
       $axios.$patch(
-        `http://localhost:3000/api/projects/${this.$route.params.id}/programs/${this.selectedId}/source`,
+        `api/projects/${this.$route.params.id}/programs/${this.selectedId}/source`,
         {
           program: { source },
         }
@@ -120,7 +120,7 @@ export default Vue.extend({
     onSubmitNewTab(programName: string) {
       $axios
         .$post(
-          `http://localhost:3000/api/projects/${this.$route.params.id}/programs`,
+          `api/projects/${this.$route.params.id}/programs`,
           {
             program: { name: programName },
           }
