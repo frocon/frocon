@@ -106,6 +106,8 @@ export default Vue.extend({
   },
   methods: {
     async signUp() {
+      localStorage.clear()
+
       await this.$fire.auth
         .createUserWithEmailAndPassword(this.email, this.password)
         .then(async (res) => {
