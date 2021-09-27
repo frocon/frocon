@@ -108,7 +108,7 @@ app.get(
 app.post('/users', async (req: express.Request, res: express.Response) => {
   const uid = await verifyIdToken(req)
   const result = await createUserUseCase(
-    req.body.user.name,
+    req.body.name.name,
     req.body.user.email,
     uid
   )
@@ -118,7 +118,7 @@ app.post('/users', async (req: express.Request, res: express.Response) => {
 app.patch('/users', async (req: express.Request, res: express.Response) => {
   const uid = await verifyIdToken(req)
   const result = await updateUserUseCase(
-    req.body.user.name,
+    req.body.name.name,
     req.body.user.email,
     uid
   )

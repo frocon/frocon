@@ -119,6 +119,7 @@ export default Vue.extend({
           )
           await $axios.$post('/api/users', {
             user: res.user,
+            name: {"name":this.name},
           })
           this.$router.push('/')
         })
