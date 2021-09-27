@@ -36,7 +36,7 @@ export default Vue.extend({
   layout: 'fullwidth',
 
   async asyncData({ params }) {
-    const res = await $axios.get(`api/projects/${params.id}`)
+    const res = await $axios.get(`/api/projects/${params.id}`)
     const project = {
       id: res.data.id,
       name: res.data.name,
