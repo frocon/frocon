@@ -9,8 +9,8 @@
         class="h-full"
       ></BlocklyComponent>
     </div>
-    <div class="w-1/2 overflow-scroll">
-      <div class="space-x-4 w-hull">
+    <div class="w-1/2">
+      <div class="h-1/2">
         <div v-if="isStepExecution" class="inline-block">
           <Button @click.native="resolveNextStep">次のステップ</Button>
           <Button @click.native="stopStepExecution">停止</Button>
@@ -19,8 +19,6 @@
           <Button @click.native="evalute">実行</Button>
           <Button @click.native="stepExecution">ステップ実行</Button>
         </div>
-      </div>
-      <div class="h-1/2">
         <Code
           :code="code"
           :is-step-execution="isStepExecution"

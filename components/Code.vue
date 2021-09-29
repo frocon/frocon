@@ -1,8 +1,6 @@
 <template>
-  <div>
-    <div class="max-h-full overflow-scroll">
-      <pre class="p-4 text-xl"><code ref="output" /></pre>
-    </div>
+  <div class="h-5/6 overflow-scroll">
+    <pre class="p-4 text-xl"><code ref="output" /></pre>
   </div>
 </template>
 

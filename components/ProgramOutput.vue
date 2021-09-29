@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="h-full">
     <Button @click.native="clearOutput">出力をクリア</Button>
-    <div class="max-h-full overflow-scroll">
+    <div class="h-5/6 overflow-scroll">
       <pre class="p-4 text-xl">{{ output }}</pre>
     </div>
   </div>
@@ -74,10 +74,8 @@ export default Vue.extend({
         if (this.isPyodideLoaded) {
           const code = this.$props.code
           const prologue = `import js\nimport sys\nimport io\nsys.stdout = io.StringIO()\nawait js.nextStep()\n`
-          const dict = (window as any).pyodide.globals.get('dict')
           await (window as any).pyodide.runPythonAsync(
-            prologue + this.setLineno(code),
-            dict()
+            prologue + this.setLineno(code)
           )
         }
       }
