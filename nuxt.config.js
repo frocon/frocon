@@ -49,6 +49,7 @@ export default {
     '@nuxtjs/date-fns',
     '@nuxtjs/pwa',
     '@nuxtjs/firebase',
+    '@nuxtjs/dotenv',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -62,13 +63,13 @@ export default {
     proxy: true,
   },
   privateRuntimeConfig: {
-    proxy: { "/api/": { target: process.env.API_URL } },
+    proxy: { '/api/': { target: process.env.API_URL } },
   },
 
   publicRuntimeConfig: {
     axios: {
-      browserBaseURL: process.env.BASE_APP_URL
-    }
+      browserBaseURL: process.env.BASE_APP_URL || 'http://localhost:3000/',
+    },
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
