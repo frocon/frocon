@@ -31,7 +31,7 @@
           text-grey-darker
         "
         type="text"
-        placeholder="Name"
+        placeholder="ユーザー名"
       />
     </div>
 
@@ -53,7 +53,7 @@
           text-grey-darker
         "
         type="email"
-        placeholder="Email"
+        placeholder="Eメール"
       />
     </div>
     <div class="mb-6">
@@ -83,51 +83,43 @@
       <p v-show="error" class="text-red-500">
         {{ error }}
       </p>
+      <a @click="toggleIsNewcommer"> 既にアカウントをお持ちの方 </a>
     </div>
     <div class="flex items-center justify-between">
-      <Button @click.native="signUp"> Sign up </Button>
-      <NuxtLink to="/login"> 既にアカウントをお持ちの方 </NuxtLink>
+      <Button @click.native="onSubmit">サインアップ</Button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import { $axios } from '@/utils/api'
 
 export default Vue.extend({
+  name: 'SignUpForm',
+  props: {
+    signUp: {
+      type: Function,
+      required: true,
+    },
+    error: {
+      type: String,
+      required: true,
+    },
+    toggleIsNewcommer: {
+      type: Function,
+      required: true,
+    },
+  },
   data() {
     return {
       name: '',
       email: '',
       password: '',
-      error: '',
     }
   },
   methods: {
-    async signUp() {
-      localStorage.clear()
-
-      await this.$fire.auth
-        .createUserWithEmailAndPassword(this.email, this.password)
-        .then(async (res) => {
-          if (!res || !res.user) return
-          const idToken = await res.user.getIdToken(true)
-
-          localStorage.setItem('access_token', idToken.toString())
-          localStorage.setItem(
-            'refresh_token',
-            res.user.refreshToken.toString()
-          )
-          await $axios.$post('/api/users', {
-            user: res.user,
-            name: {"name":this.name},
-          })
-          this.$router.push('/')
-        })
-        .catch((error: Error) => {
-          this.error = error.message
-        })
+    onSubmit() {
+      this.$props.signUp(this.name, this.email, this.password)
     },
   },
 })
