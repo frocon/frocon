@@ -67,7 +67,7 @@ export default vue.extend({
                 name,
               },
             },
-            { headers: { Authorize: idToken.toString() } }
+            { headers: { Authorization: idToken.toString() } }
           )
           this.$router.push('/')
         })
