@@ -19,7 +19,7 @@
       >
     </div>
     <div>
-      <Button @click.native="signOut">ログアウト</Button>
+      <Button @click.native="signOut">サインアウト</Button>
     </div>
   </nav>
 </template>
