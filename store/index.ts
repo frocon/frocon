@@ -44,7 +44,6 @@ export const mutations = {
   },
   SET_USER(state: State, { authUser, claims }) {
     state.authUser = {
-      idToken: authUser.Aa,
       uid: authUser.uid,
       email: authUser.email,
       emailVerified: authUser.emailVerified,

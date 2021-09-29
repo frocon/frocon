@@ -1,16 +1,12 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios'
-import { Store } from 'vuex'
 
 let $axios: NuxtAxiosInstance // eslint-disable-line import/no-mutable-exports
 
-export function initializeAxios(
-  axiosInstance: NuxtAxiosInstance,
-  store: Store<any>
-) {
+export function initializeAxios(axiosInstance: NuxtAxiosInstance) {
   $axios = axiosInstance
   $axios.interceptors.request.use(
     (config) => {
-      const idToken = store.getters.authUser.idToken
+      const idToken = localStorage.getItem('access_token')
       if (idToken) config.headers.Authorization = idToken
       return config
     },
