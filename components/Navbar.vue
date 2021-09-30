@@ -25,7 +25,9 @@
 </template>
 
 <script lang="ts">
-export default {
+import Vue from 'vue'
+
+export default Vue.extend({
   name: 'Navbar',
   methods: {
     async signOut() {
@@ -33,5 +35,5 @@ export default {
       location.reload()
     },
   },
-}
+})
 </script>
