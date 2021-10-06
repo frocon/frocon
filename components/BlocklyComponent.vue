@@ -56,7 +56,11 @@ export default Vue.extend({
         const xml = Blockly.Xml.domToText(
           Blockly.Xml.workspaceToDom(this.workspace)
         )
-        this.$props.updateSource(xml)
+        if (event.type == Blockly.Events.BLOCK_CHANGE || event.type == Blockly.Events.BLOCK_CREATE || event.type == Blockly.Events.BLOCK_DELETE || event.type == Blockly.Events.BLOCK_MOVE) {
+          const eventJsonObject = event.toJson()
+          const eventJsonString = JSON.stringify(eventJsonObject)
+          this.$props.updateSource(xml, eventJsonString)
+        }
       }
     })
     ;(window as any).highlightBlock = (id: string) => {
@@ -70,6 +74,12 @@ export default Vue.extend({
       this.workspace.clear()
       const dom = Blockly.Xml.textToDom(source)
       Blockly.Xml.domToWorkspace(dom, this.workspace)
+    },
+    whenIgnitionEventUpdate(changeCode: string) {
+      if (!this.workspace) return
+      const codeObj = JSON.parse(changeCode)
+      const workspaceEvent = Blockly.Events.fromJson(codeObj, this.workspace)
+      workspaceEvent.run(true)
     },
   },
 })

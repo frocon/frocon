@@ -2,6 +2,7 @@
   <div class="flex h-full w-full">
     <div class="w-1/2">
       <BlocklyComponent
+        ref="blocklyComp"
         id="blockly"
         :source="source"
         :update-code="updateCode"
@@ -77,6 +78,10 @@ export default Vue.extend({
     stepExecution() {
       this.isStepExecution = true
       this.evalute()
+    },
+    updateGateway(source: string) {
+      // @ts-ignore
+      this.$refs.blocklyComp.whenIgnitionEventUpdate(source)
     },
   },
 })

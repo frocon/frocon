@@ -15,7 +15,7 @@
       :on-click-tab="onClickTab"
       :on-submit-new-tab="onSubmitNewTab"
     />
-    <Editor :source="source" :update-source="updateSource" />
+    <Editor ref="editor" :source="source" :update-source="updateSource" />
   </div>
 </template>
 
@@ -30,6 +30,25 @@ const getSource = async (projectId: string, programId: string) => {
   if (!program.source)
     return '<xml xmlns="https://developers.google.com/blockly/xml"></xml>'
   return program.source
+}
+
+const getSourceOnXMLHttpRequest = (projectId: string, programId: string): string => {
+  const xhr = new XMLHttpRequest();
+  const vuexJson = localStorage.getItem('vuex');
+  const uid = vuexJson !== null ? JSON.parse(vuexJson): console.log('no uid') ;
+  xhr.open("GET", `/api/projects/${projectId}/programs/${programId}`)
+  if (uid) xhr.setRequestHeader('Authorization', uid)
+  xhr.send()
+  xhr.onreadystatechange = () => {
+    if (xhr.status == 200) {
+      const jsonObj = JSON.parse(xhr.responseText)
+      console.log('Tanaka')
+      console.log(jsonObj.source)
+      return jsonObj.source
+    }
+  }
+  console.log('Tanaka2')
+  return 'No'
 }
 
 export default Vue.extend({
@@ -84,6 +103,8 @@ export default Vue.extend({
       },
       selectedId: '',
       source: '',
+      connection: new WebSocket("wss://l0g0x3lf13.execute-api.ap-northeast-1.amazonaws.com/dev"),
+      showChild: true,
     }
   },
   head() {
@@ -108,13 +129,15 @@ export default Vue.extend({
       this.source = await getSource(this.$route.params.id, selectedId)
     },
 
-    updateSource(source: string) {
+    updateSource(source: string, eventJsonString: string) {
       $axios.$patch(
         `/api/projects/${this.$route.params.id}/programs/${this.selectedId}/source`,
         {
           program: { source },
         }
       )
+      this.connection.send('{"action": "sendmessage", "data": "' + eventJsonString.replace(/\"/g,'\\\"') + '"}');
+      console.log('updateSource')
     },
 
     onSubmitNewTab(programName: string) {
@@ -143,6 +166,21 @@ export default Vue.extend({
         confirmButtonText: '変更',
       }
     },
+    getProgram(source: string) {
+      this.$refs.editor.updateGateway(source)
+    },
+  },
+
+  created: function() {
+    this.connection.onopen = (event: any) => {
+      console.log(event)
+      console.log("Successfully connected to the echo WebSocket Server")
+    }
+    this.connection.onmessage = (event: any) => {
+      console.log('hogehoge')
+      console.log(event.data)
+      this.getProgram(event.data)
+    }
   },
 })
 </script>
