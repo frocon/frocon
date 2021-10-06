@@ -56,7 +56,7 @@ export default Vue.extend({
         const xml = Blockly.Xml.domToText(
           Blockly.Xml.workspaceToDom(this.workspace)
         )
-        if (event.type == Blockly.Events.BLOCK_CHANGE || event.type == Blockly.Events.BLOCK_CREATE || event.type == Blockly.Events.BLOCK_DELETE || event.type == Blockly.Events.BLOCK_MOVE) {
+        if (event.type == Blockly.Events.BLOCK_CHANGE) {
           const eventJsonObject = event.toJson()
           const eventJsonString = JSON.stringify(eventJsonObject)
           this.$props.updateSource(xml, eventJsonString)
