@@ -32,25 +32,6 @@ const getSource = async (projectId: string, programId: string) => {
   return program.source
 }
 
-const getSourceOnXMLHttpRequest = (projectId: string, programId: string): string => {
-  const xhr = new XMLHttpRequest();
-  const vuexJson = localStorage.getItem('vuex');
-  const uid = vuexJson !== null ? JSON.parse(vuexJson): console.log('no uid') ;
-  xhr.open("GET", `/api/projects/${projectId}/programs/${programId}`)
-  if (uid) xhr.setRequestHeader('Authorization', uid)
-  xhr.send()
-  xhr.onreadystatechange = () => {
-    if (xhr.status == 200) {
-      const jsonObj = JSON.parse(xhr.responseText)
-      console.log('Tanaka')
-      console.log(jsonObj.source)
-      return jsonObj.source
-    }
-  }
-  console.log('Tanaka2')
-  return 'No'
-}
-
 export default Vue.extend({
   layout: 'fullwidth',
 
@@ -136,7 +117,7 @@ export default Vue.extend({
           program: { source },
         }
       )
-      this.connection.send('{"action": "sendmessage", "data": "' + eventJsonString.replace(/\"/g,'\\\"') + '"}');
+      this.connection.send('{"action": "sendmessage", "data": "' + eventJsonString + '"}');
       console.log('updateSource')
     },
 
@@ -173,13 +154,15 @@ export default Vue.extend({
 
   created: function() {
     this.connection.onopen = (event: any) => {
-      console.log(event)
       console.log("Successfully connected to the echo WebSocket Server")
     }
     this.connection.onmessage = (event: any) => {
-      console.log('hogehoge')
-      console.log(event.data)
-      this.getProgram(event.data)
+      if(event.data.match(/<block.*?<\/block>/)){
+        const xml = event.data.match(/<block.*?<\/block>/)[0].replace(/\"/g,'\\\"')
+        this.getProgram(event.data.replace(/<block.*?<\/block>/,xml))
+      }else{
+        this.getProgram(event.data)
+      }
     }
   },
 })

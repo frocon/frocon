@@ -59,7 +59,11 @@ export default Vue.extend({
         if (event.type == Blockly.Events.BLOCK_CHANGE) {
           const eventJsonObject = event.toJson()
           const eventJsonString = JSON.stringify(eventJsonObject)
-          this.$props.updateSource(xml, eventJsonString)
+          this.$props.updateSource(xml, eventJsonString.replace(/\"/g,'\\\"').replace(/\//g,'\\\/'))
+        }else if(event.type == Blockly.Events.BLOCK_CREATE || event.type == Blockly.Events.BLOCK_DELETE){
+          const eventJsonObject = event.toJson()
+          const eventJsonString = JSON.stringify(eventJsonObject)
+          this.$props.updateSource(xml, eventJsonString.replace(/\\\"/g,'\"').replace(/\"/g,'\\\"').replace(/\//g,'\\\/'))
         }
       }
     })
@@ -78,6 +82,8 @@ export default Vue.extend({
     whenIgnitionEventUpdate(changeCode: string) {
       if (!this.workspace) return
       const codeObj = JSON.parse(changeCode)
+      if(this.workspace.getBlockById(codeObj.blockId) && codeObj.type==="create") return
+      if(!this.workspace.getBlockById(codeObj.blockId) && codeObj.type==="delete") return
       const workspaceEvent = Blockly.Events.fromJson(codeObj, this.workspace)
       workspaceEvent.run(true)
     },
