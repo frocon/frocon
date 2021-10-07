@@ -18,7 +18,7 @@
         >ふろこん！</a
       >
     </div>
-    <div>
+    <div v-if="isSignout">
       <Button @click.native="signOut">サインアウト</Button>
     </div>
   </nav>
@@ -29,6 +29,11 @@ import Vue from 'vue'
 
 export default Vue.extend({
   name: 'Navbar',
+  computed: {
+    isSignout(): Boolean {
+      return this.$route.path !== '/login' && this.$route.path !== '/signup'
+    },
+  },
   methods: {
     async signOut() {
       await this.$fire.auth.signOut()
