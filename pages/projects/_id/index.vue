@@ -15,7 +15,7 @@
       :on-click-tab="onClickTab"
       :on-submit-new-tab="onSubmitNewTab"
     />
-    <Editor :source="source" :update-source="updateSource" />
+    <Editor ref="editor" :source="source" :update-source="updateSource" />
   </div>
 </template>
 
@@ -84,6 +84,8 @@ export default Vue.extend({
       },
       selectedId: '',
       source: '',
+      connection: new WebSocket("wss://l0g0x3lf13.execute-api.ap-northeast-1.amazonaws.com/dev"),
+      showChild: true,
     }
   },
   head() {
@@ -106,15 +108,18 @@ export default Vue.extend({
     async onClickTab(selectedId: string) {
       this.selectedId = selectedId
       this.source = await getSource(this.$route.params.id, selectedId)
+      this.connection.send('{"action": "changeworkspace", "data": "' + selectedId + '"}')
     },
 
-    updateSource(source: string) {
+    updateSource(source: string, eventJsonString: string) {
       $axios.$patch(
         `/api/projects/${this.$route.params.id}/programs/${this.selectedId}/source`,
         {
           program: { source },
         }
       )
+      this.connection.send('{"action": "sendmessage", "data": "' + eventJsonString + '"}');
+      console.log('updateSource')
     },
 
     onSubmitNewTab(programName: string) {
@@ -143,6 +148,27 @@ export default Vue.extend({
         confirmButtonText: '変更',
       }
     },
+    getProgram(source: string) {
+      this.$refs.editor.updateGateway(source)
+    },
+  },
+
+  created: function() {
+    this.connection.onopen = (event: any) => {
+      console.log("Successfully connected to the echo WebSocket Server")
+      this.connection.send('{"action": "changeworkspace", "data": "' + this.selectedId + '"}')
+
+    }
+    this.connection.onmessage = (event: any) => {
+      console.log("recieved!")
+      console.log(event.data)
+      if(event.data.match(/<block.*?<\/block>/)){
+        const xml = event.data.match(/<block.*?<\/block>/)[0].replace(/\"/g,'\\\"')
+        this.getProgram(event.data.replace(/<block.*?<\/block>/,xml))
+      }else{
+        this.getProgram(event.data)
+      }
+    }
   },
 })
 </script>

@@ -73,7 +73,7 @@ export default Vue.extend({
       return async () => {
         if (this.isPyodideLoaded) {
           const code = this.$props.code
-          const prologue = `import js\nimport sys\nimport io\nsys.stdout = io.StringIO()\nawait js.nextStep()\n`
+          const prologue = `import js\nimport sys\nprint = js.print\nawait js.nextStep()\n`
           await (window as any).pyodide.runPythonAsync(
             prologue + this.setLineno(code)
           )
