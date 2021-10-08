@@ -1,0 +1,26 @@
+yarn run v1.22.11
+$ /opt/frocon/node_modules/.bin/prisma studio
+Prisma schema loaded from prisma/schema.prisma
+Prisma Studio is up on http://localhost:5555
+warn(prisma-client) Already 10 Prisma Clients are actively running.
+warn(prisma-client) Already 10 Prisma Clients are actively running.
+Killed
+yarn run v1.22.11
+$ /opt/frocon/node_modules/.bin/prisma studio
+Prisma schema loaded from prisma/schema.prisma
+Prisma Studio is up on http://localhost:5555
+warn(prisma-client) Already 10 Prisma Clients are actively running.
+warn(prisma-client) Already 10 Prisma Clients are actively running.
+Killed
+error Command failed with exit code 137.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+yarn run v1.22.11
+$ /opt/frocon/node_modules/.bin/prisma studio
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+Prisma Studio is up on http://localhost:5555
+yarn run v1.22.11
+$ /opt/frocon/node_modules/.bin/prisma studio
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+Prisma Studio is up on http://localhost:5556

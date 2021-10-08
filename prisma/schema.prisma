@@ -1,6 +1,6 @@
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "mysql"
+  url      = "mysql://frocon:3L3PGMkILtx3@localhost/frocon"
 }
 
 generator client {
@@ -56,5 +56,5 @@ model Program {
   project   Project  @relation(fields: [projectId], references: [id])
   projectId String
   name      String?
-  source    String?
+  source    String? @db.Text
 }

@@ -108,6 +108,7 @@ export default Vue.extend({
     async onClickTab(selectedId: string) {
       this.selectedId = selectedId
       this.source = await getSource(this.$route.params.id, selectedId)
+      this.connection.send(`{"action": "changeworkspace", "data": "${selectedId}"}`)
     },
 
     updateSource(source: string, eventJsonString: string) {
