@@ -19,7 +19,7 @@ Blockly.Python.print = function (block) {
     'text',
     Blockly.Python.ORDER_ATOMIC
   )
-  const code = `js.print(${text})\n`
+  const code = `print(${text})\n`
   return code
 }
 
