@@ -108,7 +108,7 @@ export default Vue.extend({
     async onClickTab(selectedId: string) {
       this.selectedId = selectedId
       this.source = await getSource(this.$route.params.id, selectedId)
-      this.connection.send(`{"action": "changeworkspace", "data": "${selectedId}"}`)
+      this.connection.send('{"action": "changeworkspace", "data": "' + selectedId + '"}')
     },
 
     updateSource(source: string, eventJsonString: string) {
@@ -156,8 +156,12 @@ export default Vue.extend({
   created: function() {
     this.connection.onopen = (event: any) => {
       console.log("Successfully connected to the echo WebSocket Server")
+      this.connection.send('{"action": "changeworkspace", "data": "' + this.selectedId + '"}')
+
     }
     this.connection.onmessage = (event: any) => {
+      console.log("recieved!")
+      console.log(event.data)
       if(event.data.match(/<block.*?<\/block>/)){
         const xml = event.data.match(/<block.*?<\/block>/)[0].replace(/\"/g,'\\\"')
         this.getProgram(event.data.replace(/<block.*?<\/block>/,xml))
